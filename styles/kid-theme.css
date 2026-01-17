@@ -1,0 +1,389 @@
+/* ==============================================
+   KID-FRIENDLY THEME
+   Vibrant colors, fun fonts, playful design
+   ============================================== */
+
+/* Import Fun Fonts from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Nunito:wght@300;400;600;700;800;900&display=swap');
+
+:root {
+    /* Primary Colors - Vibrant & Playful */
+    --color-primary: #7C3AED;
+    --color-primary-light: #A78BFA;
+    --color-primary-dark: #5B21B6;
+
+    --color-secondary: #F59E0B;
+    --color-secondary-light: #FCD34D;
+    --color-secondary-dark: #D97706;
+
+    --color-success: #10B981;
+    --color-success-light: #6EE7B7;
+    --color-success-dark: #059669;
+
+    --color-danger: #EF4444;
+    --color-danger-light: #FCA5A5;
+    --color-danger-dark: #DC2626;
+
+    --color-info: #3B82F6;
+    --color-info-light: #93C5FD;
+    --color-info-dark: #1D4ED8;
+
+    --color-pink: #EC4899;
+    --color-pink-light: #F9A8D4;
+
+    --color-teal: #14B8A6;
+    --color-cyan: #06B6D4;
+    --color-lime: #84CC16;
+
+    /* Gradients */
+    --gradient-rainbow: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #ffd34e 100%);
+    --gradient-sunset: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    --gradient-ocean: linear-gradient(135deg, #667eea 0%, #0093E9 100%);
+    --gradient-forest: linear-gradient(135deg, #0BA360 0%, #3CBA92 100%);
+    --gradient-fire: linear-gradient(135deg, #F2994A 0%, #F2C94C 100%);
+    --gradient-purple: linear-gradient(135deg, #A78BFA 0%, #7C3AED 100%);
+    --gradient-blue: linear-gradient(135deg, #60A5FA 0%, #3B82F6 100%);
+    --gradient-green: linear-gradient(135deg, #6EE7B7 0%, #10B981 100%);
+    --gradient-pink: linear-gradient(135deg, #F9A8D4 0%, #EC4899 100%);
+
+    /* Typography */
+    --font-heading: 'Fredoka', 'Comic Sans MS', cursive, sans-serif;
+    --font-body: 'Nunito', 'Arial Rounded MT Bold', sans-serif;
+
+    /* Spacing & Sizing */
+    --radius-sm: 12px;
+    --radius-md: 16px;
+    --radius-lg: 20px;
+    --radius-xl: 28px;
+    --radius-full: 9999px;
+
+    /* Shadows */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.15);
+    --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.2);
+
+    --shadow-glow-purple: 0 0 20px rgba(124, 58, 237, 0.4);
+    --shadow-glow-blue: 0 0 20px rgba(59, 130, 246, 0.4);
+    --shadow-glow-green: 0 0 20px rgba(16, 185, 129, 0.4);
+    --shadow-glow-pink: 0 0 20px rgba(236, 72, 153, 0.4);
+
+    /* Background Effects */
+    --bg-pattern-dots: radial-gradient(circle, rgba(124, 58, 237, 0.1) 1px, transparent 1px);
+    --bg-pattern-grid: linear-gradient(rgba(124, 58, 237, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(124, 58, 237, 0.05) 1px, transparent 1px);
+}
+
+/* Global Styles */
+body {
+    font-family: var(--font-body);
+    background: linear-gradient(135deg, #faf5ff 0%, #f0f9ff 100%);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+/* Fun Button Styles */
+.btn-kid-primary {
+    background: var(--gradient-purple);
+    color: white;
+    border-radius: var(--radius-full);
+    padding: 12px 32px;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 1.1rem;
+    border: none;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.btn-kid-primary:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: var(--shadow-glow-purple), var(--shadow-lg);
+}
+
+.btn-kid-primary:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.btn-kid-success {
+    background: var(--gradient-green);
+    color: white;
+    border-radius: var(--radius-full);
+    padding: 12px 32px;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 1.1rem;
+    border: none;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+}
+
+.btn-kid-success:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: var(--shadow-glow-green), var(--shadow-lg);
+}
+
+.btn-kid-danger {
+    background: var(--gradient-fire);
+    color: white;
+    border-radius: var(--radius-full);
+    padding: 12px 32px;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 1.1rem;
+    border: none;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+}
+
+/* Card Styles */
+.card-kid {
+    background: white;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    border: 3px solid rgba(124, 58, 237, 0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.card-kid:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl), var(--shadow-glow-purple);
+}
+
+/* Badge Styles */
+.badge-rainbow {
+    background: var(--gradient-rainbow);
+    color: white;
+    padding: 6px 16px;
+    border-radius: var(--radius-full);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 0.875rem;
+    display: inline-block;
+    box-shadow: var(--shadow-sm);
+}
+
+.badge-star {
+    background: var(--gradient-sunset);
+    color: white;
+    padding: 6px 16px;
+    border-radius: var(--radius-full);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: var(--shadow-sm);
+}
+
+.badge-star::before {
+    content: '⭐';
+    font-size: 1rem;
+}
+
+/* Input Styles */
+.input-kid {
+    background: white;
+    border: 3px solid #E0E7FF;
+    border-radius: var(--radius-lg);
+    padding: 14px 20px;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #1e293b;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.input-kid:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.1), var(--shadow-glow-purple);
+    transform: scale(1.02);
+}
+
+/* Progress Bar */
+.progress-kid {
+    height: 12px;
+    background: #E0E7FF;
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    position: relative;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.progress-kid-fill {
+    height: 100%;
+    background: var(--gradient-rainbow);
+    border-radius: var(--radius-full);
+    transition: width 0.5s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-kid-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* Emoji Decorations */
+.emoji-xl {
+    font-size: 4rem;
+    line-height: 1;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.emoji-lg {
+    font-size: 2.5rem;
+    line-height: 1;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.emoji-md {
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+/* Utility Classes */
+.text-gradient {
+    background: var(--gradient-rainbow);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.bg-gradient-purple {
+    background: var(--gradient-purple);
+}
+
+.bg-gradient-blue {
+    background: var(--gradient-blue);
+}
+
+.bg-gradient-green {
+    background: var(--gradient-green);
+}
+
+.bg-gradient-pink {
+    background: var(--gradient-pink);
+}
+
+.bg-gradient-rainbow {
+    background: var(--gradient-rainbow);
+}
+
+.bg-gradient-sunset {
+    background: var(--gradient-sunset);
+}
+
+.bg-gradient-ocean {
+    background: var(--gradient-ocean);
+}
+
+/* Fun Background Patterns */
+.bg-dots {
+    background-image: var(--bg-pattern-dots);
+    background-size: 20px 20px;
+}
+
+.bg-grid {
+    background-image: var(--bg-pattern-grid);
+    background-size: 20px 20px;
+}
+
+/* Sparkle Container */
+.sparkle-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.sparkle {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: linear-gradient(45deg, #FFD700, #FFA500);
+    border-radius: 50%;
+    animation: sparkle 1s ease-in-out infinite;
+    pointer-events: none;
+}
+
+.sparkle:nth-child(1) {
+    top: -5px;
+    right: -5px;
+    animation-delay: 0s;
+}
+
+.sparkle:nth-child(2) {
+    top: 50%;
+    right: -10px;
+    animation-delay: 0.2s;
+}
+
+.sparkle:nth-child(3) {
+    bottom: -5px;
+    right: -5px;
+    animation-delay: 0.4s;
+}
+
+/* Trophy & Medal Styles */
+.trophy-gold {
+    color: #FFD700;
+    filter: drop-shadow(0 2px 4px rgba(255, 215, 0, 0.5));
+}
+
+.trophy-silver {
+    color: #C0C0C0;
+    filter: drop-shadow(0 2px 4px rgba(192, 192, 192, 0.5));
+}
+
+.trophy-bronze {
+    color: #CD7F32;
+    filter: drop-shadow(0 2px 4px rgba(205, 127, 50, 0.5));
+}
+
+/* Fun Loading Spinner */
+.spinner-kid {
+    border: 4px solid #E0E7FF;
+    border-top: 4px solid var(--color-primary);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
