@@ -8,9 +8,10 @@ import { User } from '../../types';
 interface LoginProps {
   onLoginSuccess: (token: string, user: User) => void;
   onNavigateRegister: () => void;
+  onNavigateForgotPassword: () => void;
 }
 
-export const Login: React.FC<LoginProps> = ({ onLoginSuccess, onNavigateRegister }) => {
+export const Login: React.FC<LoginProps> = ({ onLoginSuccess, onNavigateRegister, onNavigateForgotPassword }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -59,19 +60,27 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess, onNavigateRegister
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
             />
-            <Input
-              label="Password"
-              labelSuffix={
-                <a href="#" className="text-sm font-bold text-violet-600 hover:text-violet-500 transition-colors">
+            <div className="space-y-1">
+              <div className="flex justify-between items-center">
+                <label className="block text-sm font-extrabold text-slate-600 uppercase tracking-wider">
+                  Password
+                </label>
+                <a
+                  href="#forgot-password"
+                  onClick={() => { window.location.hash = '#forgot-password'; }}
+                  className="text-sm font-bold text-violet-600 hover:text-violet-500 transition-colors cursor-pointer z-10 relative select-none"
+                >
                   Forgot password?
                 </a>
-              }
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-            />
+              </div>
+              <Input
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+              />
+            </div>
 
             <Button type="submit" className="w-full" isLoading={isLoading}>
               Sign in

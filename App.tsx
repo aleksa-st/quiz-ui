@@ -10,6 +10,8 @@ import { LandingPage } from './components/LandingPage';
 import { Dashboard } from './components/Dashboard';
 import { Login } from './components/Auth/Login';
 import { Register } from './components/Auth/Register';
+import { ForgotPassword } from './components/Auth/ForgotPassword';
+import { ResetPassword } from './components/Auth/ResetPassword';
 import { ErrorBoundary } from './components/ui/ErrorBoundary';
 
 // Feature Components
@@ -130,7 +132,8 @@ const PlaceholderPage: React.FC<{ title: string, onBack: () => void }> = ({ titl
 function App() {
   const [user, setUser] = useState<User | null>(null);
   const [settings, setSettings] = useState<AppSettings | null>(null);
-  const [currentPage, setCurrentPage] = useState<PageRoute>('landing');
+  const [route, setRoute] = useState(window.location.hash || '#landing'); // Simple hash router
+  const [resetEmail, setResetEmail] = useState(''); // Store email for reset password flow
   const [selectedQuizId, setSelectedQuizId] = useState<number | undefined>(undefined);
   const [selectedTeamId, setSelectedTeamId] = useState<number | undefined>(undefined);
   const [sessionCode, setSessionCode] = useState<string | null>(null);
@@ -212,11 +215,11 @@ function App() {
             }
 
             if (hash && validPages.includes(hash)) {
-              setCurrentPage(hash);
-            } else if (['landing', 'login', 'register'].includes(hash || '')) {
-              setCurrentPage('dashboard');
+              setRoute(`#${hash}`);
+            } else if (['landing', 'login', 'register', 'forgot-password', 'reset-password'].includes(hash || '')) {
+              setRoute('#dashboard');
             } else {
-              setCurrentPage(hash || 'dashboard');
+              setRoute(`#${hash || 'dashboard'}`);
             }
           } else {
             throw new Error('Validation failed');
@@ -225,7 +228,7 @@ function App() {
           console.error("Auth check failed", error);
           localStorage.removeItem('auth_token');
           setUser(null);
-          setCurrentPage('landing');
+          setRoute('#landing');
         }
       } else {
         // Handle Google Callback
@@ -240,7 +243,7 @@ function App() {
               const response = await api.auth.validateToken();
               if (response.success && response.data) {
                 setUser(response.data);
-                setCurrentPage('dashboard');
+                setRoute('#dashboard');
                 window.history.replaceState(null, '', '/#dashboard');
               } else {
                 throw new Error('Token validation failed');
@@ -248,17 +251,17 @@ function App() {
             } catch (error) {
               console.error('Google auth failed:', error);
               localStorage.removeItem('auth_token');
-              setCurrentPage('login');
+              setRoute('#login');
             }
           } else {
-            setCurrentPage('login');
+            setRoute('#login');
           }
         } else {
-          const publicPages: PageRoute[] = ['landing', 'login', 'register', 'forgot-password'];
+          const publicPages: PageRoute[] = ['landing', 'login', 'register', 'forgot-password', 'reset-password'];
           if (publicPages.includes(hash as any)) {
-            setCurrentPage(hash as PageRoute);
+            setRoute(`#${hash}`);
           } else {
-            setCurrentPage('landing');
+            setRoute('#landing');
           }
         }
       }
@@ -272,39 +275,44 @@ function App() {
   // Sync hash with state and handle browser back/forward
   useEffect(() => {
     const handleHashChange = () => {
-      const hash = window.location.hash.replace('#', '') as PageRoute;
-      if (hash && hash !== currentPage) {
+      const newHash = window.location.hash;
+      if (newHash && newHash !== route) {
         // Extract IDs from URL params
         const urlParams = new URLSearchParams(window.location.search);
         const quizId = urlParams.get('quizId');
         const teamId = urlParams.get('teamId');
+        const pageFromHash = newHash.replace('#', '') as PageRoute;
 
-        if (quizId && ['quiz-details', 'quiz-play', 'quiz-results'].includes(hash)) {
+        if (quizId && ['quiz-details', 'quiz-play', 'quiz-results'].includes(pageFromHash)) {
           setSelectedQuizId(parseInt(quizId));
         }
-        if (teamId && ['teams', 'team-chat', 'live-quiz'].includes(hash)) {
+        if (teamId && ['teams', 'team-chat', 'live-quiz'].includes(pageFromHash)) {
           setSelectedTeamId(parseInt(teamId));
         }
 
-        setCurrentPage(hash);
+        setRoute(newHash);
       }
     };
 
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
-  }, [currentPage]);
+  }, [route]);
 
   // Update hash when page changes (but not on initial load)
   useEffect(() => {
-    if (!isLoading && window.location.hash.replace('#', '') !== currentPage) {
-      window.location.hash = currentPage;
+    if (!isLoading && window.location.hash !== route) {
+      window.location.hash = route;
     }
-  }, [currentPage, isLoading]);
+  }, [route, isLoading]);
 
   const handleNavigate = (page: PageRoute, data?: any) => {
+    const newRoute = `#${page}`;
+    console.log(`handleNavigate called: ${page} -> ${newRoute}, current user: ${!!user}`);
+
     // Auth guard
-    if (!user && !['landing', 'login', 'register', 'forgot-password'].includes(page)) {
-      setCurrentPage('login');
+    if (!user && !['#landing', '#login', '#register', '#forgot-password', '#reset-password'].includes(newRoute)) {
+      console.log('Auth guard blocked navigation, redirecting to login');
+      setRoute('#login');
       return;
     }
 
@@ -329,10 +337,10 @@ function App() {
     }
 
     // Update URL with params
-    const newUrl = urlParams.toString() ? `${window.location.pathname}?${urlParams.toString()}#${page}` : `${window.location.pathname}#${page}`;
+    const newUrl = urlParams.toString() ? `${window.location.pathname}?${urlParams.toString()}${newRoute}` : `${window.location.pathname}${newRoute}`;
     window.history.replaceState(null, '', newUrl);
 
-    setCurrentPage(page);
+    setRoute(newRoute);
     window.scrollTo(0, 0);
   };
 
@@ -341,16 +349,22 @@ function App() {
     setUser(userData);
     // Cache user profile for this session
     cacheService.setUserProfile(userData);
-    setCurrentPage('dashboard');
+    setRoute('#dashboard');
   };
 
   const handleLogout = async () => {
-    await api.auth.logout();
-    localStorage.removeItem('auth_token');
-    // Clear cached profile on logout
-    cacheService.clearUserProfile();
-    setUser(null);
-    handleNavigate('landing');
+    console.log('handleLogout called');
+    try {
+      await api.auth.logout();
+    } catch (error) {
+      console.error('Logout API failed', error);
+    } finally {
+      localStorage.removeItem('auth_token');
+      // Clear cached profile on logout
+      cacheService.clearUserProfile();
+      setUser(null);
+      handleNavigate('landing');
+    }
   };
 
   const renderContent = () => {
@@ -365,24 +379,41 @@ function App() {
       );
     }
 
-    switch (currentPage) {
-      case 'landing':
+    switch (route) {
+      case '#landing':
         return <LandingPage
           settings={settings}
           onNavigateLogin={() => handleNavigate('login')}
           onNavigateRegister={() => handleNavigate('register')}
         />;
-      case 'login':
-        return <Login onLoginSuccess={handleLoginSuccess} onNavigateRegister={() => handleNavigate('register')} />;
-      case 'register':
+      case '#login':
+        return <Login
+          onLoginSuccess={handleLoginSuccess}
+          onNavigateRegister={() => handleNavigate('register')}
+          onNavigateForgotPassword={() => { console.log('App: Navigating to forgot-password'); handleNavigate('forgot-password'); }}
+        />;
+      case '#register':
         return <Register onRegisterSuccess={handleLoginSuccess} onNavigateLogin={() => handleNavigate('login')} />;
-      case 'dashboard':
-        return user ? <Dashboard user={user} onNavigate={handleNavigate} /> : <Login onLoginSuccess={handleLoginSuccess} onNavigateRegister={() => handleNavigate('register')} />;
+      case '#forgot-password':
+        return <ForgotPassword
+          onNavigateLogin={() => handleNavigate('login')}
+          onNavigateReset={(email) => {
+            setResetEmail(email);
+            handleNavigate('reset-password');
+          }}
+        />;
+      case '#reset-password':
+        return <ResetPassword
+          email={resetEmail}
+          onNavigateLogin={() => handleNavigate('login')}
+        />;
+      case '#dashboard':
+        return user ? <Dashboard user={user} onNavigate={handleNavigate} /> : <Login onLoginSuccess={handleLoginSuccess} onNavigateRegister={() => handleNavigate('register')} onNavigateForgotPassword={() => handleNavigate('forgot-password')} />;
 
       // Quiz Flow
-      case 'discovery':
+      case '#discovery':
         return <QuizDiscovery onNavigate={handleNavigate} />;
-      case 'quiz-details':
+      case '#quiz-details':
         return selectedQuizId ? (
           <QuizDetails
             quizId={selectedQuizId}
@@ -429,7 +460,7 @@ function App() {
           <TeamDetail
             teamId={selectedTeamId}
             onNavigate={handleNavigate}
-            onBack={() => { setSelectedTeamId(undefined); setCurrentPage('teams'); }}
+            onBack={() => { setSelectedTeamId(undefined); handleNavigate('teams'); }}
           />
         ) : (
           <TeamList onNavigate={handleNavigate} />
@@ -477,14 +508,14 @@ function App() {
         <Header
           user={user}
           settings={settings}
-          currentPage={currentPage}
+          currentPage={route as PageRoute}
           onNavigate={handleNavigate}
           onLogout={handleLogout}
         />
       )}
 
       <main className="flex-grow">
-        <ErrorBoundary key={currentPage}>
+        <ErrorBoundary key={route}>
           {renderContent()}
         </ErrorBoundary>
       </main>

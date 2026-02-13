@@ -172,6 +172,7 @@ export interface Challenge {
   message: string;
   created_at: string;
   expires_at: string;
+  status: 'pending' | 'accepted' | 'declined';
 }
 
 export interface Achievement {
@@ -251,6 +252,7 @@ export type PageRoute =
   | 'login'
   | 'register'
   | 'forgot-password'
+  | 'reset-password'
   | 'dashboard'
   | 'profile'
   | 'discovery'

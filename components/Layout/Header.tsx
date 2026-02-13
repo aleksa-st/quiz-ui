@@ -44,7 +44,7 @@ export const Header: React.FC<HeaderProps> = ({ user, settings, onNavigate, onLo
         window.location.reload();
       }
     };
-    
+
     window.addEventListener('userUpdated', handleUserUpdate);
     return () => window.removeEventListener('userUpdated', handleUserUpdate);
   }, [user]);
@@ -56,7 +56,7 @@ export const Header: React.FC<HeaderProps> = ({ user, settings, onNavigate, onLo
         api.teams.getInvitations(),
         api.challenges.getReceived()
       ]);
-      
+
       if (conversations.success) {
         const unread = conversations.data.reduce((sum: number, conv: any) => sum + (conv.unread_count || 0), 0);
         setUnreadMessages(unread);
@@ -79,23 +79,23 @@ export const Header: React.FC<HeaderProps> = ({ user, settings, onNavigate, onLo
     try {
       pusherRef.current = new Pusher(ENV.PUSHER_KEY, { cluster: ENV.PUSHER_CLUSTER });
       const channel = pusherRef.current.subscribe(`user.${user?.id}`);
-      
+
       channel.bind('new-message', () => {
         setUnreadMessages(prev => prev + 1);
       });
-      
+
       channel.bind('team-invitation', () => {
         setPendingInvites(prev => prev + 1);
       });
-      
+
       channel.bind('challenge-received', () => {
         setPendingChallenges(prev => prev + 1);
       });
-      
+
       channel.bind('challenge-accepted', () => {
         setPendingChallenges(prev => Math.max(0, prev - 1));
       });
-      
+
       channel.bind('challenge-declined', () => {
         setPendingChallenges(prev => Math.max(0, prev - 1));
       });
@@ -115,6 +115,11 @@ export const Header: React.FC<HeaderProps> = ({ user, settings, onNavigate, onLo
     { label: 'Teams', page: 'teams', icon: Users },
     { label: 'Leaderboard', page: 'leaderboard', icon: Trophy },
   ];
+
+  const handleLogoutClick = () => {
+    console.log('Header: Logout button clicked');
+    onLogout();
+  };
 
   return (
     <header className="sticky top-4 z-50 w-full px-4 sm:px-6 lg:px-8 pointer-events-none">
@@ -200,7 +205,7 @@ export const Header: React.FC<HeaderProps> = ({ user, settings, onNavigate, onLo
                   </div>
                 </div>
                 <button
-                  onClick={onLogout}
+                  onClick={handleLogoutClick}
                   className="p-2 rounded-xl text-slate-500 hover:text-red-500 hover:bg-red-50 transition-colors"
                   title="Logout"
                 >
@@ -249,7 +254,7 @@ export const Header: React.FC<HeaderProps> = ({ user, settings, onNavigate, onLo
             )}
             {user && (
               <button
-                onClick={onLogout}
+                onClick={handleLogoutClick}
                 className="inline-flex items-center justify-center p-2 rounded-xl text-slate-500 hover:text-red-500 hover:bg-red-50 transition-colors"
               >
                 <LogOut className="h-7 w-7" />
@@ -293,7 +298,7 @@ export const Header: React.FC<HeaderProps> = ({ user, settings, onNavigate, onLo
                 ))}
 
                 <div className="h-px bg-slate-100 my-2"></div>
-                <button onClick={onLogout} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-red-500 hover:bg-red-50">
+                <button onClick={handleLogoutClick} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-red-500 hover:bg-red-50">
                   <LogOut className="h-7 w-7" /> Sign Out
                 </button>
               </>

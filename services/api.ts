@@ -26,6 +26,19 @@ const getHeaders = (isMultipart = false) => {
   return headers;
 };
 
+// Custom API Error class to carry validation errors
+export class ApiError extends Error {
+  status: number;
+  errors?: Record<string, string[]>;
+
+  constructor(message: string, status: number, errors?: Record<string, string[]>) {
+    super(message);
+    this.status = status;
+    this.errors = errors;
+    this.name = 'ApiError';
+  }
+}
+
 const handleResponse = async <T>(response: Response): Promise<ApiResponse<T>> => {
   const data = await response.json();
 
@@ -37,7 +50,8 @@ const handleResponse = async <T>(response: Response): Promise<ApiResponse<T>> =>
         window.location.hash = '#login';
       }
     }
-    throw new Error(data.message || 'Something went wrong');
+    // Throw ApiError with validation details
+    throw new ApiError(data.message || 'Something went wrong', response.status, data.errors);
   }
 
   return data;

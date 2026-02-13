@@ -1,0 +1,51 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - banner:
+    - generic [ref=e5]:
+      - generic [ref=e6] [cursor=pointer]:
+        - img [ref=e8]
+        - generic [ref=e10]: Quiz Admin
+      - navigation
+      - generic [ref=e12]:
+        - button "Log in" [ref=e13] [cursor=pointer]
+        - button "Join Free" [ref=e14] [cursor=pointer]
+  - main [ref=e15]:
+    - generic [ref=e17]:
+      - generic [ref=e18]:
+        - heading "Welcome back" [level=3] [ref=e19]
+        - paragraph [ref=e20]: Sign in to your account
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - generic [ref=e23]:
+            - generic [ref=e25]: Email address
+            - textbox "you@example.com" [ref=e26]
+          - generic [ref=e27]:
+            - generic [ref=e28]:
+              - generic [ref=e29]: Password
+              - link "Forgot password?" [ref=e30] [cursor=pointer]:
+                - /url: "#forgot-password"
+            - textbox "••••••••" [ref=e32]
+          - button "Sign in" [ref=e33] [cursor=pointer]
+        - generic [ref=e34]:
+          - generic [ref=e39]: Or continue with
+          - button "Continue with Google" [ref=e41] [cursor=pointer]:
+            - img [ref=e42]
+            - text: Continue with Google
+        - paragraph [ref=e47]:
+          - text: Don't have an account?
+          - button "Sign up" [ref=e48] [cursor=pointer]
+  - contentinfo [ref=e49]:
+    - generic [ref=e51]:
+      - generic [ref=e52]:
+        - link "About" [ref=e53] [cursor=pointer]:
+          - /url: "#"
+        - link "Privacy" [ref=e54] [cursor=pointer]:
+          - /url: "#"
+        - link "Terms" [ref=e55] [cursor=pointer]:
+          - /url: "#"
+        - link "Contact" [ref=e56] [cursor=pointer]:
+          - /url: "#"
+      - paragraph [ref=e58]: © 2026 Quiz Admin. All rights reserved.
+```
