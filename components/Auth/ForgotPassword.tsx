@@ -35,6 +35,13 @@ export const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onNavigateLogin,
             }, 1500);
 
         } catch (err: any) {
+            console.log('Forgot Password Error Caught:', err);
+            console.log('Error properties:', {
+                message: err.message,
+                errors: err.errors,
+                isApiError: err.name === 'ApiError'
+            });
+
             if (err.errors && err.errors.email) {
                 setError(err.errors.email[0]);
             } else {

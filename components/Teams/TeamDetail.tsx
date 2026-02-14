@@ -115,15 +115,6 @@ export const TeamDetail: React.FC<TeamDetailProps> = ({ teamId, onNavigate, onBa
                                 <MessageCircle className="h-5 w-5 mr-2" /> Team Chat
                             </Button>
 
-                            {(isOwner || currentUser?.role === 'admin') && (
-                                <Button
-                                    onClick={() => onNavigate('create-quiz')}
-                                    className="bg-green-500 hover:bg-green-600 text-white border-0"
-                                >
-                                    <Trophy className="h-5 w-5 mr-2" /> Create Quiz
-                                </Button>
-                            )}
-
                             <Button onClick={() => setShowInviteModal(true)}>
                                 <UserPlus className="h-5 w-5 mr-2" /> Invite Members
                             </Button>

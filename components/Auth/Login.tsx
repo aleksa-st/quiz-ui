@@ -53,6 +53,7 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess, onNavigateRegister
               </div>
             )}
             <Input
+              name="email"
               label="Email address"
               type="email"
               required
@@ -74,6 +75,7 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess, onNavigateRegister
                 </a>
               </div>
               <Input
+                name="password"
                 type="password"
                 required
                 value={password}

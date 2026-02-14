@@ -95,6 +95,16 @@ export interface QuizResult {
   question_breakdown?: QuestionBreakdown[];
 }
 
+export interface PointTransaction {
+  id: number;
+  user_id: number;
+  amount: number;
+  type: 'points' | 'xp';
+  event: string;
+  description: string;
+  created_at: string;
+}
+
 export interface TeamMember {
   id: number;
   name: string;
@@ -269,7 +279,6 @@ export type PageRoute =
   | 'analytics'
   | 'achievements'
   | 'challenges'
-  | 'ai-quiz-create'
   | 'live-quiz'
   | 'live-quiz-lobby'
   | 'live-quiz-game'

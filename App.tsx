@@ -20,7 +20,6 @@ import { QuizDetails } from './components/Quiz/QuizDetails';
 import { QuizPlay } from './components/Quiz/QuizPlay';
 import { QuizResults } from './components/Quiz/QuizResults';
 import { QuizHistory } from './components/Quiz/QuizHistory';
-import { AIQuizCreation } from './components/Quiz/AIQuizCreation';
 import { PersonalAnalytics } from './components/Analytics/PersonalAnalytics';
 import { AchievementSystem } from './components/Achievements/AchievementSystem';
 import { Leaderboard } from './components/Leaderboard/Leaderboard';
@@ -32,7 +31,11 @@ import { DirectChat } from './components/Chat/DirectChat';
 import { LiveQuiz } from './components/LiveQuiz/LiveQuiz';
 import { LiveQuizLobby } from './components/LiveQuiz/LiveQuizLobby';
 import { LiveQuizGame } from './components/LiveQuiz/LiveQuizGame';
+import { PuzzleGame } from './components/PuzzleGame';
 import QuizManagement from './components/Dashboard/QuizManagement';
+import { ENV } from './src/config/env';
+import Pusher from 'pusher-js';
+import { notificationSystem } from './services/notificationSystem';
 
 // Permission wrapper for create-quiz
 const CreateQuizWithPermission: React.FC<{ onNavigate: (page: PageRoute) => void }> = ({ onNavigate }) => {
@@ -138,13 +141,16 @@ function App() {
   const [selectedTeamId, setSelectedTeamId] = useState<number | undefined>(undefined);
   const [sessionCode, setSessionCode] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isPuzzleOpen, setIsPuzzleOpen] = useState(false);
+  const [puzzleDifficulty, setPuzzleDifficulty] = useState<'easy' | 'medium' | 'hard'>('easy');
 
   // Initial Load & Auth Check
   useEffect(() => {
     let isMounted = true;
     const initApp = async () => {
       if (!isMounted) return;
-      const hash = window.location.hash.replace('#', '') as PageRoute;
+      const hashFull = window.location.hash.replace('#', '');
+      const [hash] = hashFull.split('?');
       const search = window.location.search;
 
       const token = localStorage.getItem('auth_token');
@@ -200,26 +206,29 @@ function App() {
             setUser(userData);
 
             // Maintain current page on refresh if valid
-            const validPages: PageRoute[] = ['dashboard', 'discovery', 'profile', 'teams', 'leaderboard', 'analytics', 'achievements', 'history', 'direct-chat', 'ai-quiz-create', 'quiz-details', 'quiz-play', 'quiz-results', 'team-chat', 'live-quiz', 'live-quiz-lobby', 'live-quiz-game'];
+            const validPages: PageRoute[] = ['dashboard', 'discovery', 'profile', 'teams', 'leaderboard', 'analytics', 'achievements', 'history', 'direct-chat', 'quiz-details', 'quiz-play', 'quiz-results', 'team-chat', 'live-quiz', 'live-quiz-lobby', 'live-quiz-game'];
 
-            // Extract IDs from URL params for quiz/team pages
-            const urlParams = new URLSearchParams(window.location.search);
-            const quizId = urlParams.get('quizId');
-            const teamId = urlParams.get('teamId');
+            // Extract IDs from URL params or hash params
+            const searchParams = new URLSearchParams(window.location.search);
+            const hashQuery = hashFull.includes('?') ? hashFull.split('?')[1] : '';
+            const hashParams = new URLSearchParams(hashQuery);
 
-            if (quizId && ['quiz-details', 'quiz-play', 'quiz-results'].includes(hash)) {
+            const quizId = hashParams.get('quizId') || searchParams.get('quizId');
+            const teamId = hashParams.get('teamId') || searchParams.get('teamId');
+
+            if (quizId && ['quiz-details', 'quiz-play', 'quiz-results'].includes(hash.split('?')[0])) {
               setSelectedQuizId(parseInt(quizId));
             }
-            if (teamId && ['teams', 'team-chat', 'live-quiz'].includes(hash)) {
+            if (teamId && ['teams', 'team-chat', 'live-quiz'].includes(hash.split('?')[0])) {
               setSelectedTeamId(parseInt(teamId));
             }
 
-            if (hash && validPages.includes(hash)) {
-              setRoute(`#${hash}`);
+            if (hash && validPages.includes(hash as PageRoute)) {
+              setRoute(`#${hashFull}`);
             } else if (['landing', 'login', 'register', 'forgot-password', 'reset-password'].includes(hash || '')) {
               setRoute('#dashboard');
             } else {
-              setRoute(`#${hash || 'dashboard'}`);
+              setRoute(`#${hashFull || 'dashboard'}`);
             }
           } else {
             throw new Error('Validation failed');
@@ -233,7 +242,7 @@ function App() {
       } else {
         // Handle Google Callback
         if (hash.startsWith('google-callback') || search.includes('token=')) {
-          const urlParams = new URLSearchParams(search.startsWith('?') ? search.substring(1) : hash.split('?')[1] || '');
+          const urlParams = new URLSearchParams(search.startsWith('?') ? search.substring(1) : hashFull.includes('?') ? hashFull.split('?')[1] : '');
           const token = urlParams.get('token');
           const userId = urlParams.get('user_id');
 
@@ -277,11 +286,15 @@ function App() {
     const handleHashChange = () => {
       const newHash = window.location.hash;
       if (newHash && newHash !== route) {
-        // Extract IDs from URL params
-        const urlParams = new URLSearchParams(window.location.search);
-        const quizId = urlParams.get('quizId');
-        const teamId = urlParams.get('teamId');
-        const pageFromHash = newHash.replace('#', '') as PageRoute;
+        // Extract IDs from URL params or hash params
+        const searchParams = new URLSearchParams(window.location.search);
+        const hashQuery = newHash.includes('?') ? newHash.split('?')[1] : '';
+        const hashParams = new URLSearchParams(hashQuery);
+
+        const pageFromHash = (newHash.replace('#', '').split('?')[0]) as PageRoute;
+
+        const quizId = hashParams.get('quizId') || searchParams.get('quizId');
+        const teamId = hashParams.get('teamId') || searchParams.get('teamId');
 
         if (quizId && ['quiz-details', 'quiz-play', 'quiz-results'].includes(pageFromHash)) {
           setSelectedQuizId(parseInt(quizId));
@@ -344,11 +357,87 @@ function App() {
     window.scrollTo(0, 0);
   };
 
-  const handleLoginSuccess = (token: string, userData: User) => {
+  // Listen for user profile updates from other components
+  useEffect(() => {
+    const handleUserUpdate = (event: any) => {
+      const updatedUser = event.detail;
+      if (updatedUser) {
+        setUser(updatedUser);
+      }
+    };
+    window.addEventListener('userUpdated', handleUserUpdate);
+    return () => window.removeEventListener('userUpdated', handleUserUpdate);
+  }, []);
+
+  // Real-time notifications via Pusher
+  useEffect(() => {
+    if (!user) return;
+
+    // Request notification permission
+    notificationSystem.requestPermission();
+
+    const pusher = new Pusher(ENV.PUSHER_KEY, {
+      cluster: ENV.PUSHER_CLUSTER,
+    });
+
+    // Global channel for new quizzes
+    const globalChannel = pusher.subscribe('quizzes');
+    globalChannel.bind('quiz-posted', (data: any) => {
+      console.log('Quiz posted event received:', data);
+      notificationSystem.show('New Quiz Posted!', {
+        body: `${data.creator_name} just posted: ${data.quiz_name} in ${data.category}`,
+        tag: `quiz-${data.quiz_id}`
+      });
+    });
+
+    // User-specific channel for personal notifications (messages, challenges)
+    const userChannel = pusher.subscribe(`user.${user.id}`);
+
+    userChannel.bind('new-message', (data: any) => {
+      console.log('New message event received:', data);
+      notificationSystem.show('New Message Received', {
+        body: data.message || 'You have a new direct message.',
+        tag: 'new-message'
+      });
+    });
+
+    userChannel.bind('challenge-received', (data: any) => {
+      console.log('Challenge received event received:', data);
+      notificationSystem.show('New Quiz Challenge!', {
+        body: `${data.challenger_name} challenged you to: ${data.quiz_title}`,
+        tag: `challenge-${data.challenge_id}`
+      });
+    });
+
+    return () => {
+      globalChannel.unbind_all();
+      userChannel.unbind_all();
+      pusher.unsubscribe('quizzes');
+      pusher.unsubscribe(`user.${user.id}`);
+      pusher.disconnect();
+    };
+  }, [user]);
+
+  const handleLoginSuccess = async (token: string, userData: User) => {
     localStorage.setItem('auth_token', token);
-    setUser(userData);
-    // Cache user profile for this session
-    cacheService.setUserProfile(userData);
+
+    try {
+      // Fetch full profile data once after login to ensure cache is fully populated with all fields
+      const profileRes = await api.profile.get();
+      if (profileRes.success && profileRes.data) {
+        const fullUser = profileRes.data;
+        setUser(fullUser);
+        cacheService.setUserProfile(fullUser);
+      } else {
+        setUser(userData);
+        cacheService.setUserProfile(userData);
+      }
+    } catch (error) {
+      console.error('Failed to fetch full profile after login', error);
+      setUser(userData);
+      cacheService.setUserProfile(userData);
+    }
+
     setRoute('#dashboard');
   };
 
@@ -379,7 +468,10 @@ function App() {
       );
     }
 
-    switch (route) {
+    const [pageRaw] = route.split('?');
+    const page = pageRaw.trim();
+    console.log(`App: route=[${route}] page=[${page}] selectedQuizId=${selectedQuizId}`);
+    switch (page) {
       case '#landing':
         return <LandingPage
           settings={settings}
@@ -408,22 +500,29 @@ function App() {
           onNavigateLogin={() => handleNavigate('login')}
         />;
       case '#dashboard':
-        return user ? <Dashboard user={user} onNavigate={handleNavigate} /> : <Login onLoginSuccess={handleLoginSuccess} onNavigateRegister={() => handleNavigate('register')} onNavigateForgotPassword={() => handleNavigate('forgot-password')} />;
+        return user ? <Dashboard user={user} onNavigate={handleNavigate} onOpenPuzzle={(diff) => { setPuzzleDifficulty(diff); setIsPuzzleOpen(true); }} /> : <Login onLoginSuccess={handleLoginSuccess} onNavigateRegister={() => handleNavigate('register')} onNavigateForgotPassword={() => handleNavigate('forgot-password')} />;
 
       // Quiz Flow
       case '#discovery':
         return <QuizDiscovery onNavigate={handleNavigate} />;
       case '#quiz-details':
-        return selectedQuizId ? (
-          <QuizDetails
-            quizId={selectedQuizId}
-            onNavigate={handleNavigate}
-            onBack={() => handleNavigate('discovery')}
-          />
-        ) : (
-          <QuizDiscovery onNavigate={handleNavigate} />
-        );
-      case 'quiz-play':
+        {
+          const searchParams = new URLSearchParams(window.location.search);
+          const hashQuery = route.includes('?') ? route.split('?')[1] : '';
+          const hashParams = new URLSearchParams(hashQuery);
+          const qId = selectedQuizId || parseInt(hashParams.get('quizId') || searchParams.get('quizId') || '0');
+
+          return qId ? (
+            <QuizDetails
+              quizId={qId}
+              onNavigate={handleNavigate}
+              onBack={() => handleNavigate('discovery')}
+            />
+          ) : (
+            <QuizDiscovery onNavigate={handleNavigate} />
+          );
+        }
+      case '#quiz-play':
         return selectedQuizId ? (
           <QuizPlay
             quizId={selectedQuizId}
@@ -432,30 +531,28 @@ function App() {
         ) : (
           <QuizDiscovery onNavigate={handleNavigate} />
         );
-      case 'quiz-results':
+      case '#quiz-results':
         return selectedQuizId ? (
           <QuizResults
             resultId={selectedQuizId}
             onNavigate={handleNavigate}
           />
         ) : (
-          <Dashboard user={user!} onNavigate={handleNavigate} />
+          <Dashboard user={user!} onNavigate={handleNavigate} onOpenPuzzle={(diff) => { setPuzzleDifficulty(diff); setIsPuzzleOpen(true); }} />
         );
 
-      case 'leaderboard':
+      case '#leaderboard':
         return <Leaderboard />;
-      case 'profile':
+      case '#profile':
         return <ProfileManagement />;
 
-      case 'create-quiz':
+      case '#create-quiz':
         return <CreateQuizWithPermission onNavigate={handleNavigate} />;
-      case 'ai-quiz-create':
-        return <AIQuizCreation onNavigate={handleNavigate} />;
-      case 'analytics':
+      case '#analytics':
         return <PersonalAnalytics onNavigate={handleNavigate} />;
-      case 'achievements':
+      case '#achievements':
         return <AchievementSystem onNavigate={handleNavigate} />;
-      case 'teams':
+      case '#teams':
         return selectedTeamId ? (
           <TeamDetail
             teamId={selectedTeamId}
@@ -465,7 +562,7 @@ function App() {
         ) : (
           <TeamList onNavigate={handleNavigate} />
         );
-      case 'team-chat':
+      case '#team-chat':
         return selectedTeamId ? (
           <TeamChat
             teamId={selectedTeamId}
@@ -474,15 +571,15 @@ function App() {
         ) : (
           <TeamList onNavigate={handleNavigate} />
         );
-      case 'direct-chat':
+      case '#direct-chat':
         return <DirectChat onBack={() => handleNavigate('dashboard')} />;
-      case 'teams-discovery':
+      case '#teams-discovery':
         return <TeamList onNavigate={handleNavigate} />;
-      case 'history':
+      case '#history':
         return <QuizHistory onNavigate={handleNavigate} />;
-      case 'live-quiz':
+      case '#live-quiz':
         return <LiveQuiz onNavigate={handleNavigate} teamId={selectedTeamId} />;
-      case 'live-quiz-lobby':
+      case '#live-quiz-lobby':
         return sessionCode ? (
           <LiveQuizLobby
             sessionCode={sessionCode}
@@ -490,7 +587,7 @@ function App() {
             onLeaveSession={() => handleNavigate('dashboard')}
           />
         ) : <Dashboard user={user!} onNavigate={handleNavigate} />;
-      case 'live-quiz-game':
+      case '#live-quiz-game':
         return sessionCode ? (
           <LiveQuizGame
             sessionCode={sessionCode}
@@ -521,6 +618,25 @@ function App() {
       </main>
 
       {!isLoading && <Footer settings={settings} />}
+
+      {isPuzzleOpen && (
+        <PuzzleGame
+          difficulty={puzzleDifficulty}
+          onClose={() => setIsPuzzleOpen(false)}
+          onComplete={(points, xp) => {
+            setIsPuzzleOpen(false);
+            // Refresh user data to reflect new points
+            if (user) {
+              api.auth.validateToken().then(res => {
+                if (res.success && res.data) {
+                  setUser(res.data);
+                  cacheService.setUserProfile(res.data);
+                }
+              });
+            }
+          }}
+        />
+      )}
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import {
   User, Quiz, Team, DashboardStats, ApiResponse, AuthResponse,
   Question, QuizResult, ChatConversation, ChatMessage, Challenge,
-  LeaderboardEntry, Achievement, AppSettings, LandingData
+  LeaderboardEntry, Achievement, AppSettings, LandingData, PointTransaction
 } from '../types';
 import { ENV } from '../src/config/env';
 
@@ -137,6 +137,12 @@ export const api = {
 
     updateEducation: (data: any) =>
       request<User>('/profile/educational', {
+        method: 'PUT',
+        body: JSON.stringify(data)
+      }),
+
+    update: (data: any) =>
+      request<User>('/profile', {
         method: 'PUT',
         body: JSON.stringify(data)
       }),
@@ -394,6 +400,27 @@ export const api = {
       request<void>(`/live-quiz/leave`, {
         method: 'POST',
         body: JSON.stringify({ code })
+      }),
+  },
+
+  // 12. User Transactions
+  transactions: {
+    getAll: (type?: 'points' | 'xp') =>
+      request<{
+        data: PointTransaction[];
+        total: number;
+        current_page: number;
+        last_page: number;
+      }>(`/user/transactions${type ? `?type=${type}` : ''}`),
+  },
+
+  // 13. Puzzle Mini-Game
+  puzzle: {
+    getConfiguration: () => request<any>('/settings/puzzle-config'),
+    complete: (data: { difficulty: 'easy' | 'medium' | 'hard'; moves: number; time_taken: number }) =>
+      request<any>('/puzzle/complete', {
+        method: 'POST',
+        body: JSON.stringify(data)
       }),
   }
 };

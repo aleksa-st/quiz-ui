@@ -6,6 +6,8 @@ import { Button } from '../ui/Button';
 interface Participant {
     id: number;
     name: string;
+    avatar_url?: string;
+    avatar_initials?: string;
     is_connected: boolean;
     score: number;
 }
@@ -94,7 +96,21 @@ export const LiveQuizLobby: React.FC<LiveQuizLobbyProps> = ({ sessionCode, onSta
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             {participants.map(p => (
                                 <div key={p.id} className="flex items-center gap-3 bg-white/10 p-3 rounded-xl animate-in fade-in slide-in-from-bottom-2">
-                                    <div className={`w-3 h-3 rounded-full ${p.is_connected ? 'bg-green-400 shadow-[0_0_8px_rgba(74,222,128,0.5)]' : 'bg-red-400'}`}></div>
+                                    {/* Status Indicator */}
+                                    <div className={`w-3 h-3 rounded-full flex-shrink-0 ${p.is_connected ? 'bg-green-400 shadow-[0_0_8px_rgba(74,222,128,0.5)]' : 'bg-red-400'}`}></div>
+
+                                    {/* Avatar */}
+                                    <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-white/20">
+                                        {p.avatar_url ? (
+                                            <img src={p.avatar_url} alt={p.name} className="w-full h-full object-cover" />
+                                        ) : (
+                                            <div className="w-full h-full bg-gradient-to-br from-lavender-400 to-skyblue-400 flex items-center justify-center text-white font-bold text-sm">
+                                                {p.avatar_initials || p.name.substring(0, 2).toUpperCase()}
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Name */}
                                     <span className="text-white font-medium truncate">{p.name}</span>
                                 </div>
                             ))}

@@ -1,28 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Styles */
 body {
   font-family: 'Nunito', sans-serif;
-  background-color: #F0F4F8;
+  background-color: #F8F8FF;
   overflow-x: hidden;
 }
 
 .bg-playful {
   background-color: #f0f9ff;
-  background-image: 
-    radial-gradient(#E0F2FE 15%, transparent 16%),
-    radial-gradient(#F3E8FF 15%, transparent 16%);
+  background-image:
+    radial-gradient(#E9E9FF 15%, transparent 16%),
+    radial-gradient(#E0F7FF 15%, transparent 16%);
   background-size: 60px 60px;
   background-position: 0 0, 30px 30px;
 }
 
 @keyframes float {
-  0% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-20px) rotate(5deg); }
-  100% { transform: translateY(0px) rotate(0deg); }
+  0% {
+    transform: translateY(0px) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-20px) rotate(5deg);
+  }
+
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
 }
 
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
+
 .animate-float-delayed {
   animation: float 7s ease-in-out infinite;
   animation-delay: 2s;
@@ -31,14 +44,17 @@ body {
 ::-webkit-scrollbar {
   width: 12px;
 }
+
 ::-webkit-scrollbar-track {
   background: #F1F5F9;
 }
+
 ::-webkit-scrollbar-thumb {
   background: #CBD5E1;
   border-radius: 99px;
   border: 3px solid #F1F5F9;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: #94A3B8;
 }

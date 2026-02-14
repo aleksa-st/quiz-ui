@@ -14,9 +14,10 @@ import { ChallengeList } from './Social/ChallengeList';
 interface DashboardProps {
   user: User;
   onNavigate: (page: PageRoute, data?: any) => void;
+  onOpenPuzzle?: (difficulty: 'easy' | 'medium' | 'hard') => void;
 }
 
-export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
+export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onOpenPuzzle }) => {
   const [dashboardData, setDashboardData] = useState<DashboardStats | null>(null);
   const [recentQuizzes, setRecentQuizzes] = useState<Quiz[]>([]);
   const [achievements, setAchievements] = useState<Achievement[]>([]);
@@ -27,7 +28,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
   useEffect(() => {
     let isMounted = true;
     setIsLoading(false); // Show UI immediately
-    
+
     // Load data in background
     const fetchData = async () => {
       if (!isMounted) return;
@@ -113,6 +114,115 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
       {/* Pending Challenges */}
       <ChallengeList onNavigate={onNavigate} />
 
+      {/* Puzzle Game Quick Launch - Redesigned */}
+      {onOpenPuzzle && (
+        <div className="relative">
+          {/* Background decoration */}
+          <div className="absolute -inset-1 bg-gradient-to-r from-lavender-400 via-skyblue-300 to-lavender-500 rounded-[3rem] opacity-20 blur-xl"></div>
+
+          <Card className="border-0 shadow-2xl bg-white overflow-hidden relative">
+            <CardContent className="p-0">
+              {/* Header Section with Gradient */}
+              <div className="bg-gradient-to-br from-lavender-500 via-lavender-400 to-skyblue-400 px-8 py-6 relative overflow-hidden">
+                <div className="absolute top-0 right-0 text-9xl opacity-10 -mr-8 -mt-4">🧠</div>
+                <div className="absolute bottom-0 left-0 text-7xl opacity-10 -ml-4 -mb-2">✨</div>
+                <div className="relative z-10">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center text-3xl animate-bounce">
+                      🎮
+                    </div>
+                    <h3 className="text-3xl font-black text-white">
+                      Brain Training Arena
+                    </h3>
+                  </div>
+                  <p className="text-white/90 font-semibold text-lg ml-0.5">
+                    Test your memory skills • Earn XP & Points • Level Up Fast!
+                  </p>
+                </div>
+              </div>
+
+              {/* Difficulty Cards Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-8">
+                {[
+                  {
+                    difficulty: 'easy' as const,
+                    emoji: '🌱',
+                    label: 'Easy Mode',
+                    desc: '4x4 Grid • Perfect for Beginners',
+                    color: 'from-green-400 to-emerald-500',
+                    borderColor: 'border-green-400',
+                    bgColor: 'bg-green-50',
+                    textColor: 'text-green-700',
+                    points: '+50 XP'
+                  },
+                  {
+                    difficulty: 'medium' as const,
+                    emoji: '⚡',
+                    label: 'Medium Mode',
+                    desc: '6x6 Grid • Ready for Challenge',
+                    color: 'from-skyblue-400 to-skyblue-600',
+                    borderColor: 'border-skyblue-400',
+                    bgColor: 'bg-skyblue-50',
+                    textColor: 'text-skyblue-700',
+                    points: '+100 XP'
+                  },
+                  {
+                    difficulty: 'hard' as const,
+                    emoji: '🔥',
+                    label: 'Hard Mode',
+                    desc: '8x8 Grid • Ultimate Challenge',
+                    color: 'from-lavender-500 to-lavender-700',
+                    borderColor: 'border-lavender-500',
+                    bgColor: 'bg-lavender-50',
+                    textColor: 'text-lavender-700',
+                    points: '+200 XP'
+                  }
+                ].map((mode) => (
+                  <div
+                    key={mode.difficulty}
+                    onClick={() => onOpenPuzzle(mode.difficulty)}
+                    className="group relative cursor-pointer"
+                  >
+                    {/* Card glow effect */}
+                    <div className={`absolute -inset-0.5 bg-gradient-to-r ${mode.color} rounded-3xl opacity-0 group-hover:opacity-30 blur transition duration-300`}></div>
+
+                    {/* Main card */}
+                    <div className={`relative bg-white rounded-3xl border-4 ${mode.borderColor} p-6 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300`}>
+                      {/* Emoji badge */}
+                      <div className={`w-20 h-20 mx-auto mb-4 rounded-2xl bg-gradient-to-br ${mode.color} flex items-center justify-center text-4xl shadow-xl transform group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300`}>
+                        {mode.emoji}
+                      </div>
+
+                      {/* Content */}
+                      <h4 className={`text-xl font-black text-center mb-2 ${mode.textColor}`}>
+                        {mode.label}
+                      </h4>
+                      <p className="text-slate-500 text-sm text-center font-semibold leading-relaxed mb-4">
+                        {mode.desc}
+                      </p>
+
+                      {/* XP Badge */}
+                      <div className={`${mode.bgColor} rounded-full px-4 py-2 text-center`}>
+                        <span className={`font-black text-sm ${mode.textColor}`}>
+                          {mode.points}
+                        </span>
+                      </div>
+
+                      {/* Play button */}
+                      <div className="mt-4">
+                        <div className={`w-full bg-gradient-to-r ${mode.color} text-white font-black py-3 rounded-2xl text-center shadow-lg group-hover:shadow-xl transition-all`}>
+                          Play Now →
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
       {/* Analytics Stats Grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         {dashboardData ? [
@@ -159,8 +269,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
                     { day: 'Sun', accuracy: 80 },
                   ].map((data, i) => (
                     <div key={i} className="flex flex-col items-center">
-                      <div className="w-full bg-indigo-100 rounded-t-lg mb-2 relative" style={{height: '200px'}}>
-                        <div className="absolute bottom-0 w-full bg-indigo-600 rounded-t-lg transition-all duration-500" style={{height: `${(data.accuracy / 100) * 200}px`}}></div>
+                      <div className="w-full bg-indigo-100 rounded-t-lg mb-2 relative" style={{ height: '200px' }}>
+                        <div className="absolute bottom-0 w-full bg-indigo-600 rounded-t-lg transition-all duration-500" style={{ height: `${(data.accuracy / 100) * 200}px` }}></div>
                       </div>
                       <span className="text-xs font-medium text-slate-600">{data.day}</span>
                       <span className="text-xs font-bold text-indigo-600">{data.accuracy}%</span>
@@ -171,7 +281,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
             </CardContent>
           </Card>
         </div>
-        
+
         <Card className="border-0 shadow-lg">
           <CardContent className="p-6">
             <h3 className="text-lg font-bold text-slate-800 mb-6">Category Breakdown</h3>
@@ -191,7 +301,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
                     <span className="font-bold text-slate-800">{cat.count}</span>
                   </div>
                   <div className="w-full bg-slate-200 rounded-full h-2">
-                    <div className={`${cat.color} h-2 rounded-full transition-all duration-500`} style={{width: `${cat.percentage}%`}}></div>
+                    <div className={`${cat.color} h-2 rounded-full transition-all duration-500`} style={{ width: `${cat.percentage}%` }}></div>
                   </div>
                 </div>
               ))}
@@ -274,7 +384,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
               {[
                 { label: 'Join Team', icon: Users, page: 'teams-discovery', color: 'bg-sky-100 text-sky-600' },
                 { label: 'Create Quiz', icon: Plus, page: 'create-quiz', color: 'bg-purple-100 text-purple-600' },
-                { label: 'AI Generate', icon: Zap, page: 'ai-quiz-create', color: 'bg-indigo-100 text-indigo-600' },
                 { label: 'Leaderboard', icon: Trophy, page: 'leaderboard', color: 'bg-amber-100 text-amber-600' },
                 { label: 'My History', icon: Clock, page: 'history', color: 'bg-blue-100 text-blue-600' },
                 { label: 'Achievements', icon: Award, page: 'achievements', color: 'bg-pink-100 text-pink-600' },
@@ -307,7 +416,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
                   <span className="text-lg font-bold text-indigo-600">{stats.average_score}%</span>
                 </div>
                 <div className="w-full bg-slate-200 rounded-full h-2">
-                  <div className="bg-indigo-600 h-2 rounded-full" style={{width: `${stats.average_score}%`}}></div>
+                  <div className="bg-indigo-600 h-2 rounded-full" style={{ width: `${stats.average_score}%` }}></div>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm font-medium text-slate-600">Quizzes Taken</span>

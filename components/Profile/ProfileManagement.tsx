@@ -103,13 +103,19 @@ export const ProfileManagement: React.FC = () => {
         experience_years: parseInt(careerData.experience_years) || null,
         graduation_year: parseInt(educationData.graduation_year) || null,
       };
-      await request('/profile', { method: 'PUT', body: JSON.stringify(profileData) });
 
-      // Invalidate cache to force reload on next request
-      cacheService.invalidateProfile();
+      const response = await api.profile.update(profileData);
 
-      await loadProfile();
-      setEditingSection(null);
+      if (response.success && response.data) {
+        // Update cache with the new full profile data
+        cacheService.setUserProfile(response.data);
+
+        // Notify other components (Header, Dashboard) about the update
+        window.dispatchEvent(new CustomEvent('userUpdated', { detail: response.data }));
+
+        await loadProfile();
+        setEditingSection(null);
+      }
     } catch (error) {
       console.error('Failed to save profile:', error);
     } finally {
@@ -117,19 +123,6 @@ export const ProfileManagement: React.FC = () => {
     }
   };
 
-  const request = async (endpoint: string, options: RequestInit = {}) => {
-    const token = localStorage.getItem('auth_token');
-    const response = await fetch(`${ENV.API_URL}${endpoint}`, {
-      ...options,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-        'Accept': 'application/json',
-        ...options.headers,
-      },
-    });
-    return response.json();
-  };
 
   const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -140,14 +133,17 @@ export const ProfileManagement: React.FC = () => {
       setLoading(true);
       const response = await api.profile.uploadAvatar(formData);
       if (response.success && response.data?.avatar_url) {
-        setUser(prev => prev ? { ...prev, avatar_url: response.data.avatar_url } : null);
-        setAvatarKey(Date.now());
+        // Fetch full updated profile to ensure consistency
+        const profileRes = await api.profile.get();
+        if (profileRes.success && profileRes.data) {
+          const updatedUser = profileRes.data;
+          setUser(updatedUser);
+          setAvatarKey(Date.now());
 
-        // Invalidate profile cache to get updated avatar on reload
-        cacheService.invalidateProfile();
+          cacheService.setUserProfile(updatedUser);
 
-        // Trigger a custom event to update header
-        window.dispatchEvent(new CustomEvent('userUpdated', { detail: { avatar_url: response.data.avatar_url } }));
+          window.dispatchEvent(new CustomEvent('userUpdated', { detail: updatedUser }));
+        }
       }
     } catch (error) {
       console.error('Failed to upload avatar:', error);
