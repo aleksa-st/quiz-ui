@@ -1,7 +1,7 @@
 import {
   User, Quiz, Team, DashboardStats, ApiResponse, AuthResponse,
   Question, QuizResult, ChatConversation, ChatMessage, Challenge,
-  LeaderboardEntry, Achievement, AppSettings, LandingData, PointTransaction
+  LeaderboardEntry, Achievement, Settings, LandingData, PointTransaction, Feedback, ChallengeResult
 } from '../types';
 import { ENV } from '../src/config/env';
 
@@ -77,6 +77,35 @@ const request = async <T>(endpoint: string, options: RequestInit = {}): Promise<
 
 export const api = {
   // 1. Authentication
+  feedback: {
+    submit: (data: { name: string; rating: number; comment: string }) =>
+      request('/feedback', {
+        method: 'POST',
+        headers: getHeaders(),
+        body: JSON.stringify(data),
+      }),
+    getApproved: () =>
+      request<Feedback[]>('/feedback', {
+        headers: getHeaders(),
+      }),
+  },
+  landing: {
+    getLeaderboard: () => request<LeaderboardEntry[]>('/leaderboard'),
+    getFeedbacks: () => request<Feedback[]>('/feedback'),
+    getRecentChallenges: () => request<ChallengeResult[]>('/challenges/recent'),
+    getData: () => request<LandingData>('/landing-data'),
+  },
+  publicData: {
+    getCompetitions: () => request<any[]>('/public/competitions'),
+    getPrograms: () => request<any[]>('/public/programs'),
+    getResources: (params: Record<string, any> = {}) => {
+      const queryString = new URLSearchParams(params).toString();
+      return request<any[]>(`/public/resources?${queryString}`);
+    },
+    getVolunteerOpportunities: () => request<any[]>('/public/volunteer-opportunities'),
+    getStats: () => request<any>('/public/stats'),
+    getRandomQuestions: () => request<any[]>('/public/random-questions'),
+  },
   auth: {
     login: (email: string, password: string) =>
       request<AuthResponse>('/login', {
@@ -164,7 +193,7 @@ export const api = {
 
   // 3. App Settings
   appSettings: {
-    get: () => request<AppSettings>('/app-settings'),
+    get: () => request<Settings>('/app-settings'),
   },
 
   // 4. Quizzes
@@ -285,6 +314,10 @@ export const api = {
 
   // 7. Challenges
   challenges: {
+    getRecent: () =>
+      request<ChallengeResult[]>('/challenges/recent', {
+        headers: getHeaders(),
+      }),
     send: (data: any) =>
       request<void>('/challenges/send', {
         method: 'POST',
@@ -355,7 +388,7 @@ export const api = {
     join: (code: string) =>
       request<{ session: any }>('/live-quiz/join', {
         method: 'POST',
-        body: JSON.stringify({ code })
+        body: JSON.stringify({ session_code: code })
       }),
 
     // Get session details (for lobby and status)
@@ -366,7 +399,14 @@ export const api = {
     start: (code: string) =>
       request<{ started: boolean }>(`/live-quiz/start`, {
         method: 'POST',
-        body: JSON.stringify({ code })
+        body: JSON.stringify({ session_code: code })
+      }),
+
+    // Move to next question (host only)
+    nextQuestion: (code: string) =>
+      request<{ message: string }>('/live-quiz/next', {
+        method: 'POST',
+        body: JSON.stringify({ session_code: code })
       }),
 
     // Get current question
@@ -395,11 +435,15 @@ export const api = {
     getLeaderboard: (code: string) =>
       request<any>(`/live-quiz/leaderboard/${code}`),
 
+    // Get session status (for game loop)
+    getSessionStatus: (code: string) =>
+      request<any>(`/live-quiz/status?session_code=${code}`),
+
     // Leave session
     leave: (code: string) =>
       request<void>(`/live-quiz/leave`, {
         method: 'POST',
-        body: JSON.stringify({ code })
+        body: JSON.stringify({ session_code: code })
       }),
   },
 

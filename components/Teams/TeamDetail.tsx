@@ -64,7 +64,7 @@ export const TeamDetail: React.FC<TeamDetailProps> = ({ teamId, onNavigate, onBa
     if (loading) {
         return (
             <div className="flex justify-center items-center h-96">
-                <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
+                <Loader2 className="h-8 w-8 animate-spin text-violet-600" />
             </div>
         );
     }
@@ -78,16 +78,16 @@ export const TeamDetail: React.FC<TeamDetailProps> = ({ teamId, onNavigate, onBa
 
     return (
         <div className="max-w-6xl mx-auto px-4 py-8">
-            <Button variant="ghost" onClick={onBack} className="mb-6 pl-0 hover:bg-transparent hover:text-indigo-600">
+            <Button variant="ghost" onClick={onBack} className="mb-6 pl-0 hover:bg-transparent hover:text-violet-600">
                 <ArrowLeft className="h-5 w-5 mr-2" /> Back to Teams
             </Button>
 
             {/* Header Section */}
             <div className="bg-white rounded-[2rem] p-8 shadow-xl mb-8 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-50 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
+                <div className="absolute top-0 right-0 w-64 h-64 bg-violet-50 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
 
                 <div className="relative z-10 flex flex-col md:flex-row gap-8 items-start">
-                    <div className="w-24 h-24 rounded-3xl bg-indigo-100 flex items-center justify-center text-3xl font-black text-indigo-600 shadow-inner">
+                    <div className="w-24 h-24 rounded-3xl bg-violet-100 flex items-center justify-center text-3xl font-black text-violet-600 shadow-inner">
                         {team.avatar ? (
                             <img src={team.avatar} alt={team.name} className="w-full h-full object-cover rounded-3xl" />
                         ) : (
@@ -129,8 +129,8 @@ export const TeamDetail: React.FC<TeamDetailProps> = ({ teamId, onNavigate, onBa
 
                     {/* Quick Stats */}
                     <div className="flex gap-4">
-                        <div className="bg-indigo-50 rounded-2xl p-4 text-center min-w-[100px]">
-                            <Users className="h-6 w-6 text-indigo-600 mx-auto mb-2" />
+                        <div className="bg-violet-50 rounded-2xl p-4 text-center min-w-[100px]">
+                            <Users className="h-6 w-6 text-violet-600 mx-auto mb-2" />
                             <div className="text-2xl font-black text-slate-900">{team.members?.length || 0}</div>
                             <div className="text-xs text-slate-500 font-bold uppercase">Members</div>
                         </div>
@@ -146,13 +146,13 @@ export const TeamDetail: React.FC<TeamDetailProps> = ({ teamId, onNavigate, onBa
             {/* Members Section */}
             <div className="mb-8">
                 <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center">
-                    <Users className="h-6 w-6 mr-3 text-indigo-600" />
+                    <Users className="h-6 w-6 mr-3 text-violet-600" />
                     Team Members
                 </h2>
 
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                     {team.members?.sort((a, b) => b.total_score - a.total_score).map((member, index) => (
-                        <div key={member.id} className="bg-white rounded-2xl p-4 border border-slate-200 hover:border-indigo-200 hover:shadow-lg transition-all group relative">
+                        <div key={member.id} className="bg-white rounded-2xl p-4 border border-slate-200 hover:border-violet-200 hover:shadow-lg transition-all group relative">
                             {/* Rank Badge */}
                             <div className="absolute top-4 right-4 text-xs font-black text-slate-300">#{index + 1}</div>
 
@@ -171,7 +171,7 @@ export const TeamDetail: React.FC<TeamDetailProps> = ({ teamId, onNavigate, onBa
                                         </div>
                                     )}
                                     {member.role === 'admin' && (
-                                        <div className="absolute -bottom-1 -right-1 bg-blue-500 p-1 rounded-full border-2 border-white" title="Admin">
+                                        <div className="absolute -bottom-1 -right-1 bg-sky-500 p-1 rounded-full border-2 border-white" title="Admin">
                                             <Shield className="h-3 w-3 text-white" />
                                         </div>
                                     )}
@@ -181,7 +181,7 @@ export const TeamDetail: React.FC<TeamDetailProps> = ({ teamId, onNavigate, onBa
                                         {member.name === 'You' ? 'You' : member.name}
                                     </h3>
                                     <div className="text-xs font-medium text-slate-500 flex items-center gap-1">
-                                        <span className="bg-indigo-50 text-indigo-600 px-1.5 py-0.5 rounded">
+                                        <span className="bg-violet-50 text-violet-600 px-1.5 py-0.5 rounded">
                                             {member.total_score} XP
                                         </span>
                                         <span>• Joined {member.joined_date}</span>
@@ -196,7 +196,7 @@ export const TeamDetail: React.FC<TeamDetailProps> = ({ teamId, onNavigate, onBa
                                         Chat
                                     </Button>
                                     {member.role === 'member' && (
-                                        <Button size="sm" variant="ghost" className="flex-1 h-8 text-xs text-blue-600 hover:text-blue-700 hover:bg-blue-50" onClick={() => handlePromote(member.id)}>
+                                        <Button size="sm" variant="ghost" className="flex-1 h-8 text-xs text-sky-600 hover:text-sky-700 hover:bg-sky-50" onClick={() => handlePromote(member.id)}>
                                             Promote
                                         </Button>
                                     )}
@@ -219,3 +219,4 @@ export const TeamDetail: React.FC<TeamDetailProps> = ({ teamId, onNavigate, onBa
         </div>
     );
 };
+

@@ -45,12 +45,12 @@ export const AchievementHero: React.FC<AchievementHeroProps> = ({ userStats, ach
     return (
         <div className="relative overflow-hidden rounded-[2.5rem] bg-slate-900 p-8 md:p-12 text-white shadow-2xl">
             {/* Background Effects */}
-            <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-600/30 rounded-full blur-3xl -mr-20 -mt-20 animate-pulse"></div>
+            <div className="absolute top-0 right-0 w-96 h-96 bg-violet-600/30 rounded-full blur-3xl -mr-20 -mt-20 animate-pulse"></div>
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-fuchsia-600/20 rounded-full blur-3xl -ml-10 -mb-10"></div>
 
             <div className="relative z-10 grid md:grid-cols-2 gap-10 items-center">
                 <div>
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/30 border border-indigo-400/30 text-indigo-200 text-xs font-bold mb-6 tracking-wide uppercase">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-500/30 border border-violet-400/30 text-violet-200 text-xs font-bold mb-6 tracking-wide uppercase">
                         <Sparkles className="h-3 w-3" />
                         {isFreshUser ? "Rookie Journey" : "Legend Path"}
                     </div>
@@ -59,14 +59,14 @@ export const AchievementHero: React.FC<AchievementHeroProps> = ({ userStats, ach
                         Level {userStats.level}
                     </h2>
                     <div className="flex items-center gap-2 mb-8">
-                        <p className="text-indigo-200 text-lg font-medium">
+                        <p className="text-violet-200 text-lg font-medium">
                             {isFreshUser
                                 ? "Your journey has just begun! Play quizzes to gain XP."
                                 : `${userStats.xp} Total XP earned so far.`}
                         </p>
                         <button
                             onClick={() => setShowInfo(true)}
-                            className="p-1 rounded-full hover:bg-white/10 text-indigo-300 transition-colors"
+                            className="p-1 rounded-full hover:bg-white/10 text-violet-300 transition-colors"
                             title="How is XP calculated?"
                         >
                             <Info className="h-4 w-4" />
@@ -81,7 +81,7 @@ export const AchievementHero: React.FC<AchievementHeroProps> = ({ userStats, ach
                         </div>
                         <div className="w-full bg-slate-700 rounded-full h-4 mb-2 overflow-hidden">
                             <div
-                                className="bg-gradient-to-r from-indigo-500 to-fuchsia-500 h-4 rounded-full transition-all duration-1000 ease-out shadow-[0_0_15px_rgba(99,102,241,0.6)]"
+                                className="bg-gradient-to-r from-violet-500 to-fuchsia-500 h-4 rounded-full transition-all duration-1000 ease-out shadow-[0_0_15px_rgba(99,102,241,0.6)]"
                                 style={{ width: `${Math.max(5, getProgressPercentage())}%` }}
                             ></div>
                         </div>
@@ -91,16 +91,16 @@ export const AchievementHero: React.FC<AchievementHeroProps> = ({ userStats, ach
                     </div>
                 </div>
 
-                <div className="bg-gradient-to-br from-indigo-500/10 to-fuchsia-500/10 rounded-3xl p-6 border border-white/10 backdrop-blur-md">
+                <div className="bg-gradient-to-br from-violet-500/10 to-fuchsia-500/10 rounded-3xl p-6 border border-white/10 backdrop-blur-md">
 
-                    <h3 className="text-sm font-bold text-indigo-300 uppercase tracking-wider mb-4 border-b border-white/10 pb-2">
+                    <h3 className="text-sm font-bold text-violet-300 uppercase tracking-wider mb-4 border-b border-white/10 pb-2">
                         Next Milestone
                     </h3>
 
                     {nextTarget ? (
                         <div className="flex items-center gap-5">
                             <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center border border-slate-700 shadow-inner group">
-                                {getIcon(nextTarget.icon, "text-slate-500 group-hover:text-indigo-400 transition-colors")}
+                                {getIcon(nextTarget.icon, "text-slate-500 group-hover:text-violet-400 transition-colors")}
                             </div>
                             <div>
                                 <h4 className="text-xl font-bold text-white mb-1">{nextTarget.title || nextTarget.name}</h4>
@@ -122,7 +122,7 @@ export const AchievementHero: React.FC<AchievementHeroProps> = ({ userStats, ach
                         <div className="text-xs text-slate-400">
                             <strong>Tip:</strong> Daily streaks grant bonus XP!
                         </div>
-                        <Button size="sm" onClick={() => onNavigate('discovery')} className="bg-white text-slate-900 hover:bg-indigo-50 border-0">
+                        <Button size="sm" onClick={() => onNavigate('discovery')} className="bg-white text-slate-900 hover:bg-violet-50 border-0">
                             Play Now <ChevronRight className="h-4 w-4 ml-1" />
                         </Button>
                     </div>
@@ -144,8 +144,8 @@ export const AchievementHero: React.FC<AchievementHeroProps> = ({ userStats, ach
                         </h3>
                         <div className="space-y-4">
                             <div className="flex gap-4">
-                                <div className="h-10 w-10 rounded-full bg-indigo-500/20 flex items-center justify-center shrink-0">
-                                    <Target className="h-5 w-5 text-indigo-400" />
+                                <div className="h-10 w-10 rounded-full bg-violet-500/20 flex items-center justify-center shrink-0">
+                                    <Target className="h-5 w-5 text-violet-400" />
                                 </div>
                                 <div>
                                     <h4 className="font-bold text-white">Quizzes</h4>
@@ -171,7 +171,7 @@ export const AchievementHero: React.FC<AchievementHeroProps> = ({ userStats, ach
                                 </div>
                             </div>
                         </div>
-                        <Button className="w-full mt-6 bg-indigo-600 hover:bg-indigo-500" onClick={() => setShowInfo(false)}>
+                        <Button className="w-full mt-6 bg-violet-600 hover:bg-violet-500" onClick={() => setShowInfo(false)}>
                             Got it!
                         </Button>
                     </div>
@@ -180,3 +180,4 @@ export const AchievementHero: React.FC<AchievementHeroProps> = ({ userStats, ach
         </div>
     );
 };
+

@@ -20,13 +20,23 @@ export const LiveQuizGame: React.FC<LiveQuizGameProps> = ({ sessionCode, onExit 
         return () => clearInterval(interval);
     }, [sessionCode]);
 
+    // Reset selection when question changes
+    const prevQuestionId = React.useRef<number | null>(null);
+    useEffect(() => {
+        const currentQId = status?.current_question?.id;
+        if (currentQId && currentQId !== prevQuestionId.current) {
+            setSelectedAnswer(null);
+            prevQuestionId.current = currentQId;
+        }
+    }, [status?.current_question?.id]);
+
     const fetchStatus = async () => {
         try {
             const res = await api.liveQuiz.getSessionStatus(sessionCode);
             if (res.success) {
                 setStatus(res.data);
                 setIsHost(res.data.is_host);
-                if (res.data.status === 'finished') {
+                if (res.data.status === 'completed') {
                     setGameEnded(true);
                 }
             }
@@ -41,7 +51,12 @@ export const LiveQuizGame: React.FC<LiveQuizGameProps> = ({ sessionCode, onExit 
         if (selectedAnswer) return; // Prevent multiple answers
         setSelectedAnswer(answerId);
         try {
-            await api.liveQuiz.submitAnswer(sessionCode, status.current_question.id, answerId);
+            await api.liveQuiz.submitAnswer({
+                session_code: sessionCode,
+                question_id: status.current_question.id,
+                answer: String(answerId),
+                time_taken: 0 // TODO: Implement timer
+            });
         } catch (error) {
             console.error("Failed to submit answer", error);
         }
@@ -56,7 +71,7 @@ export const LiveQuizGame: React.FC<LiveQuizGameProps> = ({ sessionCode, onExit 
         }
     };
 
-    if (loading) return <div className="min-h-screen bg-indigo-900 flex items-center justify-center"><Loader2 className="h-10 w-10 text-white animate-spin" /></div>;
+    if (loading) return <div className="min-h-screen bg-violet-900 flex items-center justify-center"><Loader2 className="h-10 w-10 text-white animate-spin" /></div>;
 
     if (gameEnded) {
         return (
@@ -67,20 +82,20 @@ export const LiveQuizGame: React.FC<LiveQuizGameProps> = ({ sessionCode, onExit 
                     <div className="space-y-4">
                         {status?.participants?.sort((a: any, b: any) => b.score - a.score).map((p: any, idx: number) => (
                             <div key={p.id} className="flex justify-between items-center bg-black/20 p-4 rounded-xl">
-                                <span className="font-bold text-lg"><span className="text-indigo-400 mr-4">#{idx + 1}</span> {p.name}</span>
+                                <span className="font-bold text-lg"><span className="text-violet-400 mr-4">#{idx + 1}</span> {p.name}</span>
                                 <span className="font-mono text-yellow-400">{p.score} pts</span>
                             </div>
                         ))}
                     </div>
                 </div>
-                <Button onClick={onExit} className="mt-8 bg-indigo-600">Back to Dashboard</Button>
+                <Button onClick={onExit} className="mt-8 bg-violet-600">Back to Dashboard</Button>
             </div>
         );
     }
 
     if (!status?.current_question) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-indigo-900 to-slate-900 flex flex-col items-center justify-center text-white p-8 font-sans">
+            <div className="min-h-screen bg-gradient-to-br from-violet-900 to-slate-900 flex flex-col items-center justify-center text-white p-8 font-sans">
                 <h2 className="text-3xl font-bold mb-4">Get Ready!</h2>
                 <p className="opacity-70">Question loading...</p>
                 {isHost && (
@@ -97,7 +112,7 @@ export const LiveQuizGame: React.FC<LiveQuizGameProps> = ({ sessionCode, onExit 
             {/* Header */}
             <div className="p-4 flex justify-between items-center bg-black/20">
                 <div className="text-sm font-bold opacity-50">Room: {sessionCode}</div>
-                <div className="bg-indigo-600 rounded-full px-4 py-1 text-xs font-bold uppercase tracking-wider">
+                <div className="bg-violet-600 rounded-full px-4 py-1 text-xs font-bold uppercase tracking-wider">
                     Live
                 </div>
             </div>
@@ -114,15 +129,19 @@ export const LiveQuizGame: React.FC<LiveQuizGameProps> = ({ sessionCode, onExit 
                 </div>
 
                 {/* Options Grid */}
+                {/* Options Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
-                    {q.options?.map((opt: any) => (
+                    {(Array.isArray(q.options)
+                        ? q.options
+                        : Object.entries(q.options || {}).map(([key, value]) => ({ id: key, text: value as string }))
+                    ).map((opt: any) => (
                         <button
                             key={opt.id}
                             disabled={selectedAnswer !== null}
                             onClick={() => handleAnswer(opt.id)}
                             className={`p-6 rounded-2xl text-left transition-all transform hover:scale-[1.02] active:scale-95 shadow-xl font-bold text-xl flex items-center justify-between
                                 ${selectedAnswer === opt.id
-                                    ? 'bg-indigo-500 ring-4 ring-indigo-300'
+                                    ? 'bg-violet-500 ring-4 ring-violet-300'
                                     : 'bg-white/10 hover:bg-white/20'
                                 }
                             `}
@@ -136,7 +155,7 @@ export const LiveQuizGame: React.FC<LiveQuizGameProps> = ({ sessionCode, onExit 
                 {/* Host Controls */}
                 {isHost && (
                     <div className="mt-12">
-                        <Button onClick={handleNext} className="bg-white text-slate-900 hover:bg-indigo-50 px-8 py-4 text-lg rounded-full shadow-lg font-black">
+                        <Button variant="ghost" onClick={handleNext} className="bg-white text-slate-900 hover:bg-violet-50 px-8 py-4 text-lg rounded-full shadow-lg font-black">
                             Next Question <ArrowRight className="ml-2 h-5 w-5" />
                         </Button>
                     </div>
@@ -145,3 +164,4 @@ export const LiveQuizGame: React.FC<LiveQuizGameProps> = ({ sessionCode, onExit 
         </div>
     );
 };
+

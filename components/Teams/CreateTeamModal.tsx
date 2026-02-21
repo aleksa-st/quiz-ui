@@ -41,7 +41,7 @@ export const CreateTeamModal: React.FC<CreateTeamModalProps> = ({ onClose, onSub
                             type="text"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all font-medium"
+                            className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-violet-500 focus:ring-4 focus:ring-violet-500/10 outline-none transition-all font-medium"
                             placeholder="e.g. Quiz Masters"
                             required
                         />
@@ -51,7 +51,7 @@ export const CreateTeamModal: React.FC<CreateTeamModalProps> = ({ onClose, onSub
                         <textarea
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
-                            className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all font-medium resize-none h-24"
+                            className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-violet-500 focus:ring-4 focus:ring-violet-500/10 outline-none transition-all font-medium resize-none h-24"
                             placeholder="What is this team about?"
                         />
                     </div>
@@ -78,3 +78,4 @@ export const CreateTeamModal: React.FC<CreateTeamModalProps> = ({ onClose, onSub
         </div>
     );
 };
+

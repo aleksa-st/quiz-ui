@@ -134,7 +134,7 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess, onNavigateRegister
 
           <p className="mt-6 text-center text-sm text-gray-600">
             Don't have an account?{' '}
-            <button onClick={onNavigateRegister} className="font-medium text-indigo-600 hover:text-indigo-500">
+            <button onClick={onNavigateRegister} className="font-medium text-violet-600 hover:text-violet-500">
               Sign up
             </button>
           </p>
@@ -143,3 +143,4 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess, onNavigateRegister
     </div>
   );
 };
+

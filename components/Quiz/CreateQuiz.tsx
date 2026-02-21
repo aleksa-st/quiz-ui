@@ -259,7 +259,7 @@ export default function CreateQuiz({ onClose, onSuccess, editQuiz }: CreateQuizP
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+              className="flex-1 py-2 px-4 bg-sky-600 text-white rounded-lg hover:bg-sky-700 disabled:opacity-50"
             >
               {loading ? (editQuiz ? 'Updating...' : 'Creating...') : (editQuiz ? 'Update Quiz' : 'Create Quiz')}
             </button>

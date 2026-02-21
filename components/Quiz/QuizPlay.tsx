@@ -205,7 +205,7 @@ export const QuizPlay: React.FC<QuizPlayProps> = ({ quizId, onComplete }) => {
   const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 flex flex-col relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-sky-50 flex flex-col relative overflow-hidden">
       {/* Floating background shapes */}
       <FloatingShapes count={12} />
 
@@ -249,7 +249,7 @@ export const QuizPlay: React.FC<QuizPlayProps> = ({ quizId, onComplete }) => {
         {/* Progress Bar */}
         <div className="absolute bottom-0 left-0 w-full h-2 bg-gradient-to-r from-purple-100 to-pink-100">
           <div
-            className="h-full bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 transition-all duration-500 ease-out relative overflow-hidden"
+            className="h-full bg-gradient-to-r from-purple-500 via-pink-500 to-sky-500 transition-all duration-500 ease-out relative overflow-hidden"
             style={{ width: `${progress}%` }}
           >
             {/* Shimmer effect */}

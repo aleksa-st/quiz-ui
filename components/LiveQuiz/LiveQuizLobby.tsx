@@ -65,10 +65,10 @@ export const LiveQuizLobby: React.FC<LiveQuizLobbyProps> = ({ sessionCode, onSta
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 p-4">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-violet-600 via-purple-600 to-pink-500 p-4">
             <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl p-8 max-w-2xl w-full text-center shadow-2xl">
                 <h1 className="text-4xl font-black text-white mb-2">Quiz Lobby</h1>
-                <p className="text-indigo-100 mb-8">Waiting for players to join...</p>
+                <p className="text-violet-100 mb-8">Waiting for players to join...</p>
 
                 {/* Code Display */}
                 <div className="bg-white/20 rounded-2xl p-6 mb-8 inline-block backdrop-blur-sm">
@@ -104,7 +104,7 @@ export const LiveQuizLobby: React.FC<LiveQuizLobbyProps> = ({ sessionCode, onSta
                                         {p.avatar_url ? (
                                             <img src={p.avatar_url} alt={p.name} className="w-full h-full object-cover" />
                                         ) : (
-                                            <div className="w-full h-full bg-gradient-to-br from-lavender-400 to-skyblue-400 flex items-center justify-center text-white font-bold text-sm">
+                                            <div className="w-full h-full bg-gradient-to-br from-lavender-400 to-skysky-400 flex items-center justify-center text-white font-bold text-sm">
                                                 {p.avatar_initials || p.name.substring(0, 2).toUpperCase()}
                                             </div>
                                         )}
@@ -146,3 +146,4 @@ export const LiveQuizLobby: React.FC<LiveQuizLobbyProps> = ({ sessionCode, onSta
         </div>
     );
 };
+

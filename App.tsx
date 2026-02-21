@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { User, PageRoute, AppSettings } from './types';
+import { User, PageRoute, Settings } from './types';
 import { api } from './services/api';
 import { cacheService } from './services/cacheService';
 
@@ -33,6 +33,15 @@ import { LiveQuizLobby } from './components/LiveQuiz/LiveQuizLobby';
 import { LiveQuizGame } from './components/LiveQuiz/LiveQuizGame';
 import { PuzzleGame } from './components/PuzzleGame';
 import QuizManagement from './components/Dashboard/QuizManagement';
+import {
+  EliteMastermind,
+  OnlineCompetitions,
+  SkillDevelopment,
+  AchievementsPublic,
+  Resources,
+  Volunteer,
+  ContactPage
+} from './components/Public';
 import { ENV } from './src/config/env';
 import Pusher from 'pusher-js';
 import { notificationSystem } from './services/notificationSystem';
@@ -134,7 +143,7 @@ const PlaceholderPage: React.FC<{ title: string, onBack: () => void }> = ({ titl
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
-  const [settings, setSettings] = useState<AppSettings | null>(null);
+  const [settings, setSettings] = useState<Settings | null>(null);
   const [route, setRoute] = useState(window.location.hash || '#landing'); // Simple hash router
   const [resetEmail, setResetEmail] = useState(''); // Store email for reset password flow
   const [selectedQuizId, setSelectedQuizId] = useState<number | undefined>(undefined);
@@ -266,7 +275,12 @@ function App() {
             setRoute('#login');
           }
         } else {
-          const publicPages: PageRoute[] = ['landing', 'login', 'register', 'forgot-password', 'reset-password'];
+          const publicPages: PageRoute[] = [
+            'landing', 'home', 'elite-mastermind', 'competitions',
+            'skill-development', 'achievements-public', 'resources',
+            'volunteer', 'contact', 'login', 'register',
+            'forgot-password', 'reset-password'
+          ];
           if (publicPages.includes(hash as any)) {
             setRoute(`#${hash}`);
           } else {
@@ -322,8 +336,15 @@ function App() {
     const newRoute = `#${page}`;
     console.log(`handleNavigate called: ${page} -> ${newRoute}, current user: ${!!user}`);
 
-    // Auth guard
-    if (!user && !['#landing', '#login', '#register', '#forgot-password', '#reset-password'].includes(newRoute)) {
+    // Auth guard for protected routes
+    const publicRoutes = [
+      '#landing', '#home', '#elite-mastermind', '#competitions',
+      '#skill-development', '#achievements-public', '#resources',
+      '#volunteer', '#contact', '#login', '#register',
+      '#forgot-password', '#reset-password'
+    ];
+
+    if (!user && !publicRoutes.includes(newRoute)) {
       console.log('Auth guard blocked navigation, redirecting to login');
       setRoute('#login');
       return;
@@ -473,11 +494,27 @@ function App() {
     console.log(`App: route=[${route}] page=[${page}] selectedQuizId=${selectedQuizId}`);
     switch (page) {
       case '#landing':
+      case '#home':
         return <LandingPage
           settings={settings}
           onNavigateLogin={() => handleNavigate('login')}
           onNavigateRegister={() => handleNavigate('register')}
+          onNavigatePage={(page) => handleNavigate(page)}
         />;
+      case '#elite-mastermind':
+        return <EliteMastermind onNavigate={handleNavigate} />;
+      case '#competitions':
+        return <OnlineCompetitions />;
+      case '#skill-development':
+        return <SkillDevelopment />;
+      case '#achievements-public':
+        return <AchievementsPublic />;
+      case '#resources':
+        return <Resources />;
+      case '#volunteer':
+        return <Volunteer />;
+      case '#contact':
+        return <ContactPage settings={settings} />;
       case '#login':
         return <Login
           onLoginSuccess={handleLoginSuccess}
@@ -591,7 +628,10 @@ function App() {
         return sessionCode ? (
           <LiveQuizGame
             sessionCode={sessionCode}
-            onExit={() => handleNavigate('dashboard')}
+            onExit={() => {
+              setSessionCode(null);
+              handleNavigate('dashboard');
+            }}
           />
         ) : <Dashboard user={user!} onNavigate={handleNavigate} />;
       default:
@@ -600,16 +640,13 @@ function App() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50 font-sans">
-      {!isLoading && (
-        <Header
-          user={user}
-          settings={settings}
-          currentPage={route as PageRoute}
-          onNavigate={handleNavigate}
-          onLogout={handleLogout}
-        />
-      )}
+    <div className="flex flex-col min-h-screen bg-slate-50 font-sans">
+      <Header
+        user={user}
+        onLogout={handleLogout}
+        onNavigate={handleNavigate}
+        settings={settings}
+      />
 
       <main className="flex-grow">
         <ErrorBoundary key={route}>

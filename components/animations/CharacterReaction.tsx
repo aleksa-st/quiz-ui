@@ -17,7 +17,7 @@ export const CharacterReaction: React.FC<CharacterReactionProps> = ({ mood, mess
         },
         thinking: {
             face: '🤔',
-            color: 'from-blue-400 to-cyan-500',
+            color: 'from-sky-400 to-cyan-500',
             messages: ['Hmm...', 'Think carefully!', 'You can do it!']
         },
         excited: {
@@ -58,3 +58,4 @@ export const CharacterReaction: React.FC<CharacterReactionProps> = ({ mood, mess
         </div>
     );
 };
+

@@ -83,7 +83,7 @@ export default function QuizManagement() {
         <h2 className="text-xl font-semibold">Quiz Management</h2>
         <button
           onClick={() => setShowCreateQuiz(true)}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-2"
+          className="bg-sky-600 text-white px-4 py-2 rounded-lg hover:bg-sky-700 flex items-center gap-2"
         >
           <span>+</span>
           Create Quiz
@@ -96,7 +96,7 @@ export default function QuizManagement() {
           placeholder="Search quizzes..."
           value={search}
           onChange={(e) => handleSearch(e.target.value)}
-          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
         />
       </div>
 
@@ -149,7 +149,7 @@ export default function QuizManagement() {
                         setEditingQuiz(quiz);
                         setShowCreateQuiz(true);
                       }}
-                      className="text-blue-600 hover:text-blue-800 text-sm"
+                      className="text-sky-600 hover:text-sky-800 text-sm"
                     >
                       Edit
                     </button>

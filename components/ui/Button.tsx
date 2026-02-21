@@ -6,25 +6,26 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   isLoading?: boolean;
 }
 
-export const Button: React.FC<ButtonProps> = ({ 
-  children, 
-  variant = 'primary', 
-  size = 'md', 
-  isLoading, 
-  className = '', 
+export const Button: React.FC<ButtonProps> = ({
+  children,
+  variant = 'primary',
+  size = 'md',
+  isLoading,
+  className = '',
   disabled,
-  ...props 
+  ...props
 }) => {
   // 3D Button Styles (Pushable)
   const baseStyles = "relative inline-flex items-center justify-center font-extrabold rounded-2xl transition-all focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed active:translate-y-1 active:border-b-0";
-  
+
   const variants = {
-    primary: "bg-violet-500 text-white border-b-4 border-violet-700 hover:bg-violet-400 hover:border-violet-600",
-    secondary: "bg-sky-400 text-white border-b-4 border-sky-600 hover:bg-sky-300 hover:border-sky-500",
+    primary: "bg-violet-600 text-white border-b-4 border-violet-800 hover:bg-violet-500 hover:border-violet-700",
+    secondary: "bg-sky-500 text-white border-b-4 border-sky-700 hover:bg-sky-400 hover:border-sky-600",
     success: "bg-green-500 text-white border-b-4 border-green-700 hover:bg-green-400 hover:border-green-600",
     warning: "bg-yellow-400 text-yellow-900 border-b-4 border-yellow-600 hover:bg-yellow-300 hover:border-yellow-500",
     danger: "bg-rose-500 text-white border-b-4 border-rose-700 hover:bg-rose-400 hover:border-rose-600",
     outline: "bg-white text-slate-600 border-2 border-slate-200 border-b-4 hover:bg-slate-50 hover:border-slate-300",
+    "outline-white": "bg-transparent text-white border-2 border-white/30 border-b-4 hover:bg-white/10 hover:border-white/50",
     ghost: "bg-transparent text-slate-600 hover:bg-slate-100 border-none active:translate-y-0",
   };
 
@@ -36,7 +37,7 @@ export const Button: React.FC<ButtonProps> = ({
   };
 
   return (
-    <button 
+    <button
       className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`}
       disabled={isLoading || disabled}
       {...props}

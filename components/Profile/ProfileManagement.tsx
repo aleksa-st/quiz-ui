@@ -159,7 +159,7 @@ export const ProfileManagement: React.FC = () => {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-sky-50">
       <div className="max-w-5xl mx-auto px-6 py-8 sm:py-12">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">Profile Management</h1>
@@ -192,8 +192,8 @@ export const ProfileManagement: React.FC = () => {
         <div className="bg-white rounded-3xl p-8 mb-6 shadow-xl">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                <UserIcon className="w-6 h-6 text-blue-600" />
+              <div className="w-12 h-12 bg-sky-100 rounded-xl flex items-center justify-center">
+                <UserIcon className="w-6 h-6 text-sky-600" />
               </div>
               <h2 className="text-xl font-bold text-gray-900">Personal Details</h2>
             </div>
@@ -288,7 +288,7 @@ export const ProfileManagement: React.FC = () => {
             <>
               <div className="grid gap-4 max-w-md">
                 {user?.google_id ? (
-                  <p className="text-blue-600 text-sm mb-4">Since you have Google authentication, you can change your password without entering the current one.</p>
+                  <p className="text-sky-600 text-sm mb-4">Since you have Google authentication, you can change your password without entering the current one.</p>
                 ) : (
                   <div><label className="block text-gray-700 mb-2 text-sm font-medium">Current Password</label><input type="password" value={personalData.current_password || ''} onChange={(e) => setPersonalData({ ...personalData, current_password: e.target.value })} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" /></div>
                 )}
@@ -364,3 +364,4 @@ export const ProfileManagement: React.FC = () => {
     </div>
   );
 };
+

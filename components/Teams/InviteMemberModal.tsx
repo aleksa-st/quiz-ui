@@ -80,7 +80,7 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({ teamId, on
                         type="text"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
-                        className="w-full pl-12 pr-4 py-3 rounded-xl border-2 border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all font-medium"
+                        className="w-full pl-12 pr-4 py-3 rounded-xl border-2 border-slate-200 focus:border-violet-500 focus:ring-4 focus:ring-violet-500/10 outline-none transition-all font-medium"
                         placeholder="Search by name or email..."
                     />
                 </div>
@@ -88,7 +88,7 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({ teamId, on
                 <div className="flex-1 overflow-y-auto min-h-[200px] mb-4 space-y-2">
                     {loading ? (
                         <div className="flex justify-center py-8">
-                            <Loader2 className="h-6 w-6 animate-spin text-indigo-600" />
+                            <Loader2 className="h-6 w-6 animate-spin text-violet-600" />
                         </div>
                     ) : results.length > 0 ? (
                         results.map(user => {
@@ -98,15 +98,15 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({ teamId, on
                                     key={user.id}
                                     onClick={() => toggleUser(user)}
                                     className={`flex items-center justify-between p-3 rounded-xl border-2 cursor-pointer transition-all ${isSelected
-                                            ? 'border-indigo-600 bg-indigo-50'
-                                            : 'border-slate-100 hover:border-indigo-200 hover:bg-slate-50'
+                                            ? 'border-violet-600 bg-violet-50'
+                                            : 'border-slate-100 hover:border-violet-200 hover:bg-slate-50'
                                         }`}
                                 >
                                     <div className="flex items-center gap-3">
                                         {user.avatar ? (
                                             <img src={user.avatar} alt={user.name} className="w-10 h-10 rounded-full object-cover" />
                                         ) : (
-                                            <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold">
+                                            <div className="w-10 h-10 rounded-full bg-violet-100 flex items-center justify-center text-violet-600 font-bold">
                                                 {user.avatar_initials || user.name.substring(0, 2).toUpperCase()}
                                             </div>
                                         )}
@@ -115,7 +115,7 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({ teamId, on
                                             <p className="text-xs text-slate-500">{user.email}</p>
                                         </div>
                                     </div>
-                                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${isSelected ? 'bg-indigo-600 border-indigo-600' : 'border-slate-300'
+                                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${isSelected ? 'bg-violet-600 border-violet-600' : 'border-slate-300'
                                         }`}>
                                         {isSelected && <Check className="h-3 w-3 text-white" />}
                                     </div>
@@ -140,3 +140,4 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({ teamId, on
         </div>
     );
 };
+

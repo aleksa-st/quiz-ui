@@ -81,6 +81,12 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onOpenPu
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      {/* Version Marker (Temporary for Debugging) */}
+      <div className="w-full flex justify-end px-2">
+        <span className="text-[10px] uppercase tracking-widest font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-md">
+          v3.8 • Feb 14 • Notifications
+        </span>
+      </div>
       {/* Welcome / Achievement Hero */}
       {dashboardData?.stats ? (
         <AchievementHero
@@ -118,12 +124,12 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onOpenPu
       {onOpenPuzzle && (
         <div className="relative">
           {/* Background decoration */}
-          <div className="absolute -inset-1 bg-gradient-to-r from-lavender-400 via-skyblue-300 to-lavender-500 rounded-[3rem] opacity-20 blur-xl"></div>
+          <div className="absolute -inset-1 bg-gradient-to-r from-lavender-400 via-skysky-300 to-lavender-500 rounded-[3rem] opacity-20 blur-xl"></div>
 
           <Card className="border-0 shadow-2xl bg-white overflow-hidden relative">
-            <CardContent className="p-0">
+            <CardContent className="!p-0">
               {/* Header Section with Gradient */}
-              <div className="bg-gradient-to-br from-lavender-500 via-lavender-400 to-skyblue-400 px-8 py-6 relative overflow-hidden">
+              <div className="bg-gradient-to-br from-lavender-500 via-lavender-400 to-skysky-400 px-8 py-6 relative overflow-hidden">
                 <div className="absolute top-0 right-0 text-9xl opacity-10 -mr-8 -mt-4">🧠</div>
                 <div className="absolute bottom-0 left-0 text-7xl opacity-10 -ml-4 -mb-2">✨</div>
                 <div className="relative z-10">
@@ -142,7 +148,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onOpenPu
               </div>
 
               {/* Difficulty Cards Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-8">
+              {/* Difficulty Cards Grid - Mobile Scroll / Desktop Grid */}
+              <div className="flex overflow-x-auto md:grid md:grid-cols-3 gap-4 md:gap-6 p-4 md:p-8 snap-x snap-mandatory scrollbar-hide">
                 {[
                   {
                     difficulty: 'easy' as const,
@@ -160,10 +167,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onOpenPu
                     emoji: '⚡',
                     label: 'Medium Mode',
                     desc: '6x6 Grid • Ready for Challenge',
-                    color: 'from-skyblue-400 to-skyblue-600',
-                    borderColor: 'border-skyblue-400',
-                    bgColor: 'bg-skyblue-50',
-                    textColor: 'text-skyblue-700',
+                    color: 'from-skysky-400 to-skysky-600',
+                    borderColor: 'border-skysky-400',
+                    bgColor: 'bg-skysky-50',
+                    textColor: 'text-skysky-700',
                     points: '+100 XP'
                   },
                   {
@@ -181,37 +188,39 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onOpenPu
                   <div
                     key={mode.difficulty}
                     onClick={() => onOpenPuzzle(mode.difficulty)}
-                    className="group relative cursor-pointer"
+                    className="group relative cursor-pointer min-w-[260px] md:min-w-0 snap-center first:pl-2 last:pr-2"
                   >
-                    {/* Card glow effect */}
-                    <div className={`absolute -inset-0.5 bg-gradient-to-r ${mode.color} rounded-3xl opacity-0 group-hover:opacity-30 blur transition duration-300`}></div>
-
                     {/* Main card */}
-                    <div className={`relative bg-white rounded-3xl border-4 ${mode.borderColor} p-6 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300`}>
+                    <div className="relative bg-white rounded-3xl border border-slate-100 p-5 hover:-translate-y-1 hover:shadow-xl transition-all duration-300 h-full flex flex-col items-center">
+
+                      {/* Hover Gradient Border Effect (Subtle) */}
+                      <div className={`absolute inset-0 rounded-3xl border-2 border-transparent group-hover:border-${mode.borderColor.replace('border-', '')} opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none`}></div>
+
                       {/* Emoji badge */}
-                      <div className={`w-20 h-20 mx-auto mb-4 rounded-2xl bg-gradient-to-br ${mode.color} flex items-center justify-center text-4xl shadow-xl transform group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300`}>
+                      <div className={`w-16 h-16 mb-4 rounded-2xl bg-gradient-to-br ${mode.color} flex items-center justify-center text-3xl shadow-md transform group-hover:scale-105 transition-transform duration-300`}>
                         {mode.emoji}
                       </div>
 
                       {/* Content */}
-                      <h4 className={`text-xl font-black text-center mb-2 ${mode.textColor}`}>
+                      <h4 className="text-lg font-bold text-slate-800 text-center mb-1 group-hover:text-slate-900 transition-colors">
                         {mode.label}
                       </h4>
-                      <p className="text-slate-500 text-sm text-center font-semibold leading-relaxed mb-4">
+                      <p className="text-slate-500 text-xs text-center font-medium leading-relaxed mb-6 px-2">
                         {mode.desc}
                       </p>
 
-                      {/* XP Badge */}
-                      <div className={`${mode.bgColor} rounded-full px-4 py-2 text-center`}>
-                        <span className={`font-black text-sm ${mode.textColor}`}>
-                          {mode.points}
-                        </span>
-                      </div>
+                      {/* Footer Actions */}
+                      <div className="flex items-center justify-between w-full mt-auto gap-3">
+                        {/* XP Badge */}
+                        <div className={`${mode.bgColor} rounded-xl px-4 py-2 flex-1 text-center`}>
+                          <span className={`font-bold text-xs ${mode.textColor}`}>
+                            {mode.points}
+                          </span>
+                        </div>
 
-                      {/* Play button */}
-                      <div className="mt-4">
-                        <div className={`w-full bg-gradient-to-r ${mode.color} text-white font-black py-3 rounded-2xl text-center shadow-lg group-hover:shadow-xl transition-all`}>
-                          Play Now →
+                        {/* Play Button (Icon) */}
+                        <div className={`w-9 h-9 rounded-full ${mode.bgColor} flex items-center justify-center group-hover:bg-gradient-to-r ${mode.color} transition-all duration-300`}>
+                          <Play className={`w-4 h-4 ${mode.textColor} group-hover:text-white fill-current transition-colors`} />
                         </div>
                       </div>
                     </div>
@@ -226,7 +235,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onOpenPu
       {/* Analytics Stats Grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         {dashboardData ? [
-          { label: 'Total Quizzes', value: stats.quizzes_taken || 0, icon: BarChart2, color: 'text-blue-600', bg: 'bg-blue-400', border: 'border-blue-500' },
+          { label: 'Total Quizzes', value: stats.quizzes_taken || 0, icon: BarChart2, color: 'text-sky-600', bg: 'bg-sky-400', border: 'border-sky-500' },
           { label: 'Avg Accuracy', value: `${stats.average_score || 0}%`, icon: TrendingUp, color: 'text-emerald-600', bg: 'bg-emerald-400', border: 'border-emerald-500' },
           { label: 'Total XP', value: userStats?.xp || 0, icon: Zap, color: 'text-yellow-600', bg: 'bg-yellow-400', border: 'border-yellow-500' },
           { label: 'Study Streak', value: `${userStats?.current_streak || 0} days`, icon: Calendar, color: 'text-orange-600', bg: 'bg-orange-400', border: 'border-orange-500' },
@@ -269,11 +278,11 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onOpenPu
                     { day: 'Sun', accuracy: 80 },
                   ].map((data, i) => (
                     <div key={i} className="flex flex-col items-center">
-                      <div className="w-full bg-indigo-100 rounded-t-lg mb-2 relative" style={{ height: '200px' }}>
-                        <div className="absolute bottom-0 w-full bg-indigo-600 rounded-t-lg transition-all duration-500" style={{ height: `${(data.accuracy / 100) * 200}px` }}></div>
+                      <div className="w-full bg-violet-100 rounded-t-lg mb-2 relative" style={{ height: '200px' }}>
+                        <div className="absolute bottom-0 w-full bg-violet-600 rounded-t-lg transition-all duration-500" style={{ height: `${(data.accuracy / 100) * 200}px` }}></div>
                       </div>
                       <span className="text-xs font-medium text-slate-600">{data.day}</span>
-                      <span className="text-xs font-bold text-indigo-600">{data.accuracy}%</span>
+                      <span className="text-xs font-bold text-violet-600">{data.accuracy}%</span>
                     </div>
                   ))}
                 </div>
@@ -287,7 +296,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onOpenPu
             <h3 className="text-lg font-bold text-slate-800 mb-6">Category Breakdown</h3>
             <div className="space-y-4">
               {[
-                { name: 'Science', count: 10, color: 'bg-blue-500', percentage: 42 },
+                { name: 'Science', count: 10, color: 'bg-sky-500', percentage: 42 },
                 { name: 'History', count: 8, color: 'bg-purple-500', percentage: 33 },
                 { name: 'Geography', count: 4, color: 'bg-green-500', percentage: 17 },
                 { name: 'Arts', count: 2, color: 'bg-yellow-500', percentage: 8 },
@@ -385,7 +394,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onOpenPu
                 { label: 'Join Team', icon: Users, page: 'teams-discovery', color: 'bg-sky-100 text-sky-600' },
                 { label: 'Create Quiz', icon: Plus, page: 'create-quiz', color: 'bg-purple-100 text-purple-600' },
                 { label: 'Leaderboard', icon: Trophy, page: 'leaderboard', color: 'bg-amber-100 text-amber-600' },
-                { label: 'My History', icon: Clock, page: 'history', color: 'bg-blue-100 text-blue-600' },
+                { label: 'My History', icon: Clock, page: 'history', color: 'bg-sky-100 text-sky-600' },
                 { label: 'Achievements', icon: Award, page: 'achievements', color: 'bg-pink-100 text-pink-600' },
               ].map((action, i) => (
                 <button
@@ -402,10 +411,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onOpenPu
             </CardContent>
           </Card>
 
-          <Card className="border-b-4 border-indigo-200">
+          <Card className="border-b-4 border-violet-200">
             <div className="p-6 pb-2">
               <h3 className="text-xl font-black text-slate-800 flex items-center gap-2">
-                <BarChart2 className="h-5 w-5 text-indigo-600" />
+                <BarChart2 className="h-5 w-5 text-violet-600" />
                 Performance
               </h3>
             </div>
@@ -413,10 +422,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate, onOpenPu
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
                   <span className="text-sm font-medium text-slate-600">Accuracy</span>
-                  <span className="text-lg font-bold text-indigo-600">{stats.average_score}%</span>
+                  <span className="text-lg font-bold text-violet-600">{stats.average_score}%</span>
                 </div>
                 <div className="w-full bg-slate-200 rounded-full h-2">
-                  <div className="bg-indigo-600 h-2 rounded-full" style={{ width: `${stats.average_score}%` }}></div>
+                  <div className="bg-violet-600 h-2 rounded-full" style={{ width: `${stats.average_score}%` }}></div>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm font-medium text-slate-600">Quizzes Taken</span>

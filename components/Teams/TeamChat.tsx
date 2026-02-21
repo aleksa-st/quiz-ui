@@ -80,13 +80,13 @@ export const TeamChat: React.FC<TeamChatProps> = ({ teamId, onBack }) => {
     return (
         <div className="flex flex-col h-[calc(100vh-80px)] bg-gray-50 max-w-4xl mx-auto rounded-xl overflow-hidden shadow-2xl my-4 border border-slate-200">
             {/* Header */}
-            <div className="bg-indigo-600 p-4 text-white flex items-center gap-4 shrink-0">
+            <div className="bg-violet-600 p-4 text-white flex items-center gap-4 shrink-0">
                 <Button variant="ghost" size="sm" onClick={onBack} className="text-white hover:bg-white/10 p-2 h-auto">
                     <ArrowLeft className="h-5 w-5" />
                 </Button>
                 <div>
                     <h2 className="font-bold text-lg">{teamName}</h2>
-                    <p className="text-indigo-200 text-xs">Team Chat</p>
+                    <p className="text-violet-200 text-xs">Team Chat</p>
                 </div>
             </div>
 
@@ -103,7 +103,7 @@ export const TeamChat: React.FC<TeamChatProps> = ({ teamId, onBack }) => {
                                 {msg.avatar ? (
                                     <img src={msg.avatar} alt={msg.user_name} className="w-8 h-8 rounded-full object-cover" />
                                 ) : (
-                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white ${msg.is_own ? 'bg-indigo-500' : 'bg-slate-400'}`}>
+                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white ${msg.is_own ? 'bg-violet-500' : 'bg-slate-400'}`}>
                                         {msg.avatar_initials}
                                     </div>
                                 )}
@@ -111,7 +111,7 @@ export const TeamChat: React.FC<TeamChatProps> = ({ teamId, onBack }) => {
                             <div className={`max-w-[70%] flex flex-col ${msg.is_own ? 'items-end' : 'items-start'}`}>
                                 {!msg.is_own && <span className="text-xs text-slate-500 mb-1 ml-1">{msg.user_name}</span>}
                                 <div className={`px-4 py-2.5 rounded-2xl text-sm ${msg.is_own
-                                    ? 'bg-indigo-600 text-white rounded-tr-sm'
+                                    ? 'bg-violet-600 text-white rounded-tr-sm'
                                     : 'bg-white text-slate-800 border border-slate-200 rounded-tl-sm shadow-sm'
                                     }`}>
                                     {msg.message}
@@ -130,7 +130,7 @@ export const TeamChat: React.FC<TeamChatProps> = ({ teamId, onBack }) => {
             <div className="p-4 bg-white border-t border-slate-200 shrink-0">
                 <form onSubmit={handleSend} className="flex gap-2">
                     <input
-                        className="flex-1 px-4 py-3 bg-slate-100 border-0 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                        className="flex-1 px-4 py-3 bg-slate-100 border-0 rounded-xl focus:ring-2 focus:ring-violet-500 outline-none transition-all"
                         placeholder="Type a message..."
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
@@ -143,3 +143,4 @@ export const TeamChat: React.FC<TeamChatProps> = ({ teamId, onBack }) => {
         </div>
     );
 };
+

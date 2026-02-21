@@ -40,7 +40,7 @@ export const QuizHistory: React.FC<QuizHistoryProps> = ({ onNavigate }) => {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-sky-50 py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-5xl mx-auto">
                 <div className="flex items-center justify-between mb-8">
                     <div className="animate-slide-in-left">
@@ -95,7 +95,7 @@ export const QuizHistory: React.FC<QuizHistoryProps> = ({ onNavigate }) => {
                                                 <td className="px-6 py-5">
                                                     <span className={`inline-flex items-center gap-1 px-4 py-2 rounded-full text-sm font-bold shadow-lg transition-all hover:scale-110
                                                         ${entry.accuracy >= 90 ? 'bg-gradient-to-r from-green-400 to-emerald-500 text-white animate-pulse-glow' :
-                                                            entry.accuracy >= 70 ? 'bg-gradient-to-r from-blue-400 to-cyan-500 text-white' :
+                                                            entry.accuracy >= 70 ? 'bg-gradient-to-r from-sky-400 to-cyan-500 text-white' :
                                                                 entry.accuracy >= 50 ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white' :
                                                                     'bg-gradient-to-r from-red-400 to-pink-500 text-white'}`}>
                                                         {entry.accuracy >= 90 ? '🌟' : entry.accuracy >= 70 ? '⭐' : entry.accuracy >= 50 ? '✨' : '💪'}
@@ -125,3 +125,4 @@ export const QuizHistory: React.FC<QuizHistoryProps> = ({ onNavigate }) => {
         </div>
     );
 };
+

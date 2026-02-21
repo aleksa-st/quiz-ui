@@ -169,17 +169,17 @@ export const TeamList: React.FC<TeamListProps> = ({ onNavigate }) => {
                     {teams.map(team => (
                         <div
                             key={team.id}
-                            className="bg-white rounded-3xl p-6 shadow-xl shadow-slate-200/50 hover:-translate-y-1 hover:shadow-2xl hover:shadow-indigo-500/20 transition-all duration-300 cursor-pointer relative group overflow-hidden border border-slate-100"
+                            className="bg-white rounded-3xl p-6 shadow-xl shadow-slate-200/50 hover:-translate-y-1 hover:shadow-2xl hover:shadow-violet-500/20 transition-all duration-300 cursor-pointer relative group overflow-hidden border border-slate-100"
                             onClick={() => onNavigate('teams', { teamId: team.id })}
                         >
-                            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-indigo-500/10 to-fuchsia-500/10 rounded-bl-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-500"></div>
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-violet-500/10 to-fuchsia-500/10 rounded-bl-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-500"></div>
 
                             <div className="relative z-10">
                                 <div className="flex justify-between items-start mb-4">
                                     {team.avatar_url ? (
                                         <img src={team.avatar_url} alt={team.name} className="w-16 h-16 rounded-2xl object-cover shadow-sm ring-4 ring-white" />
                                     ) : (
-                                        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-fuchsia-600 flex items-center justify-center text-xl font-black text-white shadow-lg shadow-indigo-500/30 ring-4 ring-white">
+                                        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-500 to-fuchsia-600 flex items-center justify-center text-xl font-black text-white shadow-lg shadow-violet-500/30 ring-4 ring-white">
                                             {team.name.substring(0, 2).toUpperCase()}
                                         </div>
                                     )}
@@ -192,7 +192,7 @@ export const TeamList: React.FC<TeamListProps> = ({ onNavigate }) => {
                                     </span>
                                 </div>
 
-                                <h3 className="font-bold text-xl text-slate-900 mb-2 truncate group-hover:text-indigo-600 transition-colors">
+                                <h3 className="font-bold text-xl text-slate-900 mb-2 truncate group-hover:text-violet-600 transition-colors">
                                     {team.name}
                                 </h3>
 
@@ -225,7 +225,7 @@ export const TeamList: React.FC<TeamListProps> = ({ onNavigate }) => {
                                                 + Quiz
                                             </button>
                                         )}
-                                        <div className="text-sm font-bold text-slate-300 group-hover:text-indigo-600 transition-colors flex items-center">
+                                        <div className="text-sm font-bold text-slate-300 group-hover:text-violet-600 transition-colors flex items-center">
                                             View <ArrowRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
                                         </div>
                                     </div>
@@ -245,3 +245,4 @@ export const TeamList: React.FC<TeamListProps> = ({ onNavigate }) => {
         </div>
     );
 };
+

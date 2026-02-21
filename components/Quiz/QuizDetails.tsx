@@ -134,7 +134,7 @@ export const QuizDetails: React.FC<QuizDetailsProps> = ({ quizId, onNavigate, on
 
         {/* Right Column: CTA */}
         <div className="md:col-span-1">
-          <Card className="sticky top-24 border-0 shadow-2xl shadow-violet-500/20 bg-gradient-to-b from-violet-600 to-indigo-700 text-white">
+          <Card className="sticky top-24 border-0 shadow-2xl shadow-violet-500/20 bg-gradient-to-b from-violet-600 to-violet-700 text-white">
             <CardContent className="p-8 text-center space-y-6">
               <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto backdrop-blur-sm">
                 <Play className="h-10 w-10 text-white fill-current ml-1" />
@@ -150,26 +150,22 @@ export const QuizDetails: React.FC<QuizDetailsProps> = ({ quizId, onNavigate, on
               <div className="space-y-3">
                 <Button
                   size="xl"
-                  className="w-full bg-white text-violet-700 hover:bg-slate-50 border-none font-bold shadow-lg"
+                  className="w-full bg-white !text-violet-700 hover:bg-slate-50 border-none font-bold shadow-lg"
                   onClick={() => onNavigate('quiz-play', quizId)}
                 >
                   Start Quiz Now
                 </Button>
-                <Button
+
+                {/* Host Session Button Removed as per request */}
+                {/* <Button
                   className="w-full bg-violet-800 text-white hover:bg-violet-900 border-white/20"
                   onClick={async () => {
-                    try {
-                      const res = await api.liveQuiz.createSession(quizId);
-                      if (res.success) {
-                        onNavigate('live-quiz-lobby', res.data.session_code);
-                      }
-                    } catch (e) {
-                      console.error(e);
-                    }
+                   ...
                   }}
                 >
                   Host Live Session
-                </Button>
+                </Button> */}
+
                 <p className="text-xs text-violet-200">1,245 people took this today</p>
               </div>
             </CardContent>

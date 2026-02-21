@@ -3,6 +3,13 @@ export interface ApiResponse<T> {
   data: T;
   message?: string;
   errors?: Record<string, string[]>;
+  pagination?: {
+    current_page: number;
+    last_page: number;
+    per_page: number;
+    total: number;
+    has_more: boolean;
+  };
 }
 
 export interface User {
@@ -206,7 +213,17 @@ export interface LeaderboardEntry {
   is_current_user: boolean;
 }
 
-export interface AppSettings {
+export interface Feedback {
+  id: number;
+  user_id: number | null;
+  name: string;
+  rating: number;
+  comment: string;
+  is_approved: boolean;
+  created_at: string;
+}
+
+export interface Settings {
   app_name: string;
   title: string;
   logo: string;
@@ -214,9 +231,15 @@ export interface AppSettings {
   welcome_message: string;
   quiz_instructions: string;
   contact_email: string;
+  contact_email_support?: string;
+  contact_phone?: string;
+  contact_address?: string;
+  contact_working_hours?: string;
+  whatsapp_url?: string;
   social_facebook: string;
   social_twitter: string;
   social_instagram: string;
+  social_youtube?: string;
   terms_url: string;
   privacy_url: string;
   max_quiz_time: number;
@@ -259,6 +282,14 @@ export interface QuizHistoryEntry {
 
 export type PageRoute =
   | 'landing'
+  | 'home'
+  | 'elite-mastermind'
+  | 'competitions'
+  | 'skill-development'
+  | 'achievements-public'
+  | 'resources'
+  | 'volunteer'
+  | 'contact'
   | 'login'
   | 'register'
   | 'forgot-password'
@@ -353,3 +384,21 @@ export interface LiveLeaderboardEntry {
   is_current_user: boolean;
 }
 
+
+export interface ChallengeResult {
+  id: number;
+  quiz_title: string;
+  challenger: {
+    name: string;
+    avatar?: string;
+    score: number;
+  };
+  challenged: {
+    name: string;
+    avatar?: string;
+    score: number;
+  };
+  winner_id: number;
+  points_awarded: number;
+  completed_at: string;
+}

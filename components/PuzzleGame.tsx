@@ -131,7 +131,7 @@ export const PuzzleGame: React.FC<PuzzleGameProps> = ({ difficulty, onClose, onC
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/80 backdrop-blur-sm p-4">
             <div className="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto border-4 border-lavender-200">
-                <div className="bg-gradient-to-r from-lavender-500 to-skyblue-500 p-6 flex justify-between items-center text-white">
+                <div className="bg-gradient-to-r from-lavender-500 to-skysky-500 p-6 flex justify-between items-center text-white">
                     <div className="flex items-center gap-3">
                         <Brain className="h-8 w-8" />
                         <h2 className="text-2xl font-black uppercase tracking-tight">Memory Match: {difficulty}</h2>
@@ -149,7 +149,7 @@ export const PuzzleGame: React.FC<PuzzleGameProps> = ({ difficulty, onClose, onC
                         </div>
                         <div className="text-center">
                             <div className="text-slate-400 text-xs font-black uppercase mb-1">Time</div>
-                            <div className="text-3xl font-black text-skyblue-600 flex items-center gap-2">
+                            <div className="text-3xl font-black text-skysky-600 flex items-center gap-2">
                                 <Timer className="h-6 w-6" />
                                 {formatTime(time)}
                             </div>
@@ -196,3 +196,4 @@ export const PuzzleGame: React.FC<PuzzleGameProps> = ({ difficulty, onClose, onC
         </div>
     );
 };
+

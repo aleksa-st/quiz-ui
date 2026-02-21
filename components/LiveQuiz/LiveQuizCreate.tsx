@@ -150,7 +150,7 @@ export const LiveQuizCreate: React.FC<LiveQuizCreateProps> = ({
     return (
         <div className="min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 p-4">
             <div className="max-w-4xl mx-auto">
-                <div className="bg-white/10 backdrop-blur-md rounded-3xl p-6 sm:p-8 border border-white/20">
+                <div className="bg-white/10 backdrop-blur-md rounded-3xl p-4 sm:p-8 border border-white/20">
                     {/* Header */}
                     <div className="flex items-center gap-4 mb-8">
                         <button
@@ -186,7 +186,7 @@ export const LiveQuizCreate: React.FC<LiveQuizCreateProps> = ({
                     </div>
 
                     {/* Content */}
-                    <div className="bg-white rounded-2xl p-6 min-h-[400px]">
+                    <div className="bg-white rounded-2xl p-4 sm:p-6 min-h-[400px]">
                         {/* Step 1: Quiz Selection */}
                         {step === 1 && (
                             <div>
@@ -226,7 +226,7 @@ export const LiveQuizCreate: React.FC<LiveQuizCreateProps> = ({
                                                             <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded font-medium">
                                                                 {quiz.total_questions} questions
                                                             </span>
-                                                            <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded font-medium">
+                                                            <span className="text-xs bg-sky-100 text-sky-700 px-2 py-1 rounded font-medium">
                                                                 {quiz.category}
                                                             </span>
                                                         </div>
@@ -270,10 +270,10 @@ export const LiveQuizCreate: React.FC<LiveQuizCreateProps> = ({
                                     ))}
                                 </div>
 
-                                <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
-                                    <h3 className="font-bold text-blue-900 mb-2">Selected Quiz</h3>
-                                    <p className="text-blue-800">{selectedQuizData?.name}</p>
-                                    <p className="text-blue-600 text-sm">{selectedQuizData?.total_questions} questions × {timePerQuestion}s = {selectedQuizData && selectedQuizData.total_questions * timePerQuestion}s total</p>
+                                <div className="bg-sky-50 border border-sky-200 rounded-xl p-4">
+                                    <h3 className="font-bold text-sky-900 mb-2">Selected Quiz</h3>
+                                    <p className="text-sky-800">{selectedQuizData?.name}</p>
+                                    <p className="text-sky-600 text-sm">{selectedQuizData?.total_questions} questions × {timePerQuestion}s = {selectedQuizData && selectedQuizData.total_questions * timePerQuestion}s total</p>
                                 </div>
                             </div>
                         )}
@@ -310,43 +310,60 @@ export const LiveQuizCreate: React.FC<LiveQuizCreateProps> = ({
                                 </div>
 
                                 {/* Member List */}
-                                <div className="space-y-2 max-h-[300px] overflow-y-auto">
+                                <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2">
                                     {filteredMembers.map((member) => (
                                         <button
                                             key={member.id}
                                             onClick={() => toggleMember(member.id)}
-                                            className={`w-full flex items-center gap-4 p-3 rounded-xl border-2 transition-all ${selectedMembers.includes(member.id)
+                                            className={`w-full flex items-center gap-3 p-3 rounded-xl border-2 transition-all ${selectedMembers.includes(member.id)
                                                 ? 'border-purple-500 bg-purple-50'
                                                 : 'border-gray-200 hover:border-purple-300'
                                                 }`}
                                         >
                                             {/* Checkbox */}
-                                            <div className={`w-5 h-5 rounded border-2 flex items-center justify-center ${selectedMembers.includes(member.id)
+                                            <div className={`w-5 h-5 rounded border-2 flex-shrink-0 flex items-center justify-center ${selectedMembers.includes(member.id)
                                                 ? 'bg-purple-600 border-purple-600'
                                                 : 'border-gray-300'
                                                 }`}>
                                                 {selectedMembers.includes(member.id) && (
-                                                    <Check className="w-4 h-4 text-white" />
+                                                    <Check className="w-3 h-3 text-white" />
                                                 )}
                                             </div>
 
                                             {/* Avatar */}
-                                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white font-bold">
-                                                {member.avatar_initials}
+                                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex-shrink-0 flex items-center justify-center text-white font-bold overflow-hidden relative">
+                                                {member.avatar ? (
+                                                    <img
+                                                        src={member.avatar}
+                                                        alt={member.name}
+                                                        className="w-full h-full object-cover"
+                                                        onError={(e) => {
+                                                            (e.target as HTMLImageElement).style.display = 'none';
+                                                        }}
+                                                    />
+                                                ) : (
+                                                    <span>{member.avatar_initials}</span>
+                                                )}
+                                                {/* Fallback for when image fails to load or is hidden */}
+                                                {member.avatar && (
+                                                    <div className="absolute inset-0 bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white font-bold -z-10">
+                                                        {member.avatar_initials}
+                                                    </div>
+                                                )}
                                             </div>
 
                                             {/* Info */}
-                                            <div className="flex-1 text-left">
-                                                <div className="font-semibold text-gray-900 flex items-center gap-2">
-                                                    {member.name}
-                                                    {member.role === 'owner' && <span className="text-xs">👑</span>}
-                                                    {member.role === 'admin' && <span className="text-xs">🛡️</span>}
+                                            <div className="flex-1 text-left min-w-0">
+                                                <div className="font-semibold text-gray-900 flex items-center gap-2 truncate">
+                                                    <span className="truncate">{member.name}</span>
+                                                    {member.role === 'owner' && <span className="text-xs flex-shrink-0">👑</span>}
+                                                    {member.role === 'admin' && <span className="text-xs flex-shrink-0">🛡️</span>}
                                                 </div>
-                                                <div className="text-xs text-gray-600">{member.email}</div>
+                                                <div className="text-xs text-gray-600 truncate">{member.email}</div>
                                             </div>
 
                                             {/* Online Status */}
-                                            <div className={`w-3 h-3 rounded-full ${member.is_online ? 'bg-green-500' : 'bg-gray-400'
+                                            <div className={`w-3 h-3 rounded-full flex-shrink-0 ${member.is_online ? 'bg-green-500' : 'bg-gray-400'
                                                 }`} />
                                         </button>
                                     ))}
@@ -399,3 +416,4 @@ export const LiveQuizCreate: React.FC<LiveQuizCreateProps> = ({
         </div>
     );
 };
+

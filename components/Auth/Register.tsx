@@ -99,7 +99,7 @@ export const Register: React.FC<RegisterProps> = ({ onRegisterSuccess, onNavigat
 
           <p className="mt-6 text-center text-sm text-gray-600">
             Already have an account?{' '}
-            <button onClick={onNavigateLogin} className="font-medium text-indigo-600 hover:text-indigo-500">
+            <button onClick={onNavigateLogin} className="font-medium text-violet-600 hover:text-violet-500">
               Sign in
             </button>
           </p>
@@ -108,3 +108,4 @@ export const Register: React.FC<RegisterProps> = ({ onRegisterSuccess, onNavigat
     </div>
   );
 };
+
